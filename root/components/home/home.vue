@@ -9,7 +9,6 @@ const router = useRouter();
 
 onMounted(() => {
   const token = localStorage.getItem('authToken');
-  console.log(token);
   if (!token) {
     router.go('/');
   } 

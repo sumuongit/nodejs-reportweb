@@ -4,10 +4,10 @@
   <div class="hero">
     <div class="d-flex flex-column justify-center align-center ga-5">
       <div class="d-flex flex-column" data-aos="fade-up" data-aos-delay="200">
-        <div class="hero-title">Sign In</div>
+        <div class="hero-title">Register</div>
       </div>
       <div class="hero-sub-title" data-aos="fade-up" data-aos-delay="300">
-        Please enter your credentials
+        Please enter user information
       </div>
     </div>
   </div>
@@ -18,7 +18,7 @@
   position: relative;
   display: flex;
   justify-content: center;
-  margin-top: 200px;
+  margin-top: 150px;
 }
 
 .hero-title {
@@ -44,14 +44,14 @@
 /* Adjust size for a 1280px screen */
 @media screen and (max-width: 1280px) {
   .hero {
-    margin-top: 75px;
+    margin-top: 50px;
   }
 }
 
 /* Further adjustments for smaller screens */
 @media screen and (max-width: 768px) {
   .hero {
-    margin-top: 200px;
+    margin-top: 150px;
   }
 }
 

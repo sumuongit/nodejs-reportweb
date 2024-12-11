@@ -34,6 +34,11 @@ exports.register = async function (req, res) {
         return;
     }
 
+    if (!user.role) {
+        res.status(400).json({ message: "Role must not be empty" });
+        return;
+    }
+
     if (!user.hash_password) {
         res.status(400).json({ message: "Password must not be empty" });
         return;
@@ -66,6 +71,7 @@ exports.signin = async function (req, res) {
             token: jsonwebtoken.sign({
                 name: user.name,
                 email: user.email,
+                role: user.role,
                 _id: user._id
             }, secretKey)
         });

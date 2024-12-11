@@ -85,8 +85,11 @@ const isMdAndUp = computed(() => mdAndUp.value);
       </v-toolbar-items>
       <v-spacer></v-spacer>
       <!-- Desktop Menu Items -->
-      <v-toolbar-items class="flex-grow-1 ga-10 pr-5 justify-end align-center" v-if="isMdAndUp">
+      <v-toolbar-items class="flex-grow-1 ga-5 pr-5 justify-end align-center" v-if="isMdAndUp">
         <!-- <v-btn flat class="login-btn">Login</v-btn> -->
+        <v-btn v-if="isAuthenticated" flat href="/register" class="elevation-0 sign-out-btn">
+          <span style="margin-right: 5px">User Register</span>
+        </v-btn>
         <v-btn v-if="isAuthenticated" @click="signout" flat href="/" class="elevation-0 sign-out-btn">
           <span style="margin-right: 5px">Sign Out</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -104,6 +107,9 @@ const isMdAndUp = computed(() => mdAndUp.value);
       <ReusableNavbar :class="navBarMenuClass" :menuItems="menuItems" :currentPath="currentPath" />
       <v-divider></v-divider>
       <!-- <v-btn flat class="login-btn">Login</v-btn> -->
+      <v-btn v-if="isAuthenticated" flat href="/register" class="elevation-0 sign-out-btn">
+        <span style="margin-right: 5px">User Register</span>
+      </v-btn>
       <v-btn v-if="isAuthenticated" @click="signout" flat href="/" class="sign-out-btn">
         <span style="margin-right: 5px">Sign Out</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">

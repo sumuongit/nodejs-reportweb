@@ -204,7 +204,7 @@ body {
 
 
 body {
-  overflow-x: hidden;
+  overflow-x: hidden; 
 }
 
 img {
@@ -213,7 +213,7 @@ img {
 }
 
 .container {
-  overflow-x: hidden;
+  overflow-x: hidden;  
 }
 
 /* CUSTOM STYLE FOR EXPANSION PANELS */
@@ -235,6 +235,7 @@ img {
   font-style: normal;
   font-weight: 500;
   line-height: 20px;   
+  width: 250px;
 }
 
 .v-textarea .v-input__control textarea {
