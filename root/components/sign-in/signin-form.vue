@@ -12,6 +12,7 @@ if (import.meta.env.MODE === 'development') {
   baseUrl = import.meta.env.VITE_PRO_BASE_URL;
 } else {
   console.log('Running client in unknown or development mode');
+  baseUrl = import.meta.env.VITE_DEV_BASE_URL || '';
 }
 
 const snackbar = ref(false);
@@ -54,7 +55,6 @@ const submitSigninForm = async () => {
   if (validateForm()) {
     isSubmitting.value = true;
     try {
-      // Make the POST request
       const response = await axios.post(
         `${baseUrl}/api/auth/signin`,
         {
@@ -68,7 +68,6 @@ const submitSigninForm = async () => {
         }
       );
 
-      // Extract and store the token
       const token = response.data.token;
       if (token) {
         localStorage.setItem('authToken', token);
@@ -150,7 +149,7 @@ const submitSigninForm = async () => {
 
 <style scoped>
 .wrapper {
-  color: #000;  
+  color: #000;
 }
 
 .signin-form {

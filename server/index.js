@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const userRoute = require('./routes/user');
+const reportRoute = require('./routes/report');
 const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
@@ -35,6 +36,7 @@ app.use(express.json());
 //app.use(cors({ origin: ORIGIN }));
 app.use(cors(corsOptions));
 app.use('/api', userRoute);
+app.use('/api', reportRoute);
 
 // Serve static files from the VitePress `dist` directory
 //app.use(express.static(path.join(__dirname, '..', 'root', '.vitepress', 'dist')));
