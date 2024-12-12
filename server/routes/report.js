@@ -5,6 +5,6 @@ const jwtVerify = require('../middleware/jwt-verify');
 const router = express.Router();
 
 //**********API ENDPOINTS**********//
-router.post('/report/read', jwtVerify.tokenVerify, reportController.read);
+router.get('/report/read', jwtVerify.tokenVerify, reportController.read);
 
 module.exports = router;

@@ -57,6 +57,9 @@ const submitRegisterForm = async () => {
   if (validateForm()) {
     isSubmitting.value = true;
     try {
+      const token = localStorage.getItem('authToken');
+        if (!token) throw new Error('User not authenticated.');        
+
       // Make the POST request
       const response = await axios.post(
         `${baseUrl}/api/auth/register`,
@@ -69,6 +72,7 @@ const submitRegisterForm = async () => {
         {
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
         }
       );

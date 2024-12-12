@@ -118,7 +118,7 @@ const submitSigninForm = async () => {
         <v-text-field variant="underlined" v-model="formData.email" label="Email Address"
           :error-messages="errors.email ? [errors.email] : []" @input="errors.email = rules.email(formData.email)"
           required />
-        <v-text-field variant="underlined" v-model="formData.password" label="Password" class="w-100"
+        <v-text-field variant="underlined" v-model="formData.password" label="Password" class="w-100" type="password"
           :error-messages="errors.password ? [errors.password] : []"
           @input="errors.password = rules.password(formData.password)" required />
         <div class="d-flex justify-center">
