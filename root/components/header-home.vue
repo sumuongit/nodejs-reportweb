@@ -1,11 +1,11 @@
 <script setup>
 import NavBar from './nav-bar.vue';
-import Hero from './hero-home.vue';
+import HeroHome from './hero-home.vue';
 </script>
 
 <template>
   <NavBar></NavBar>
-  <Hero></Hero>
+  <HeroHome></HeroHome>
 </template>
 
 <style scoped>

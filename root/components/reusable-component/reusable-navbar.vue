@@ -30,7 +30,7 @@
 
   /* HOME */
   .navbar-menu-home .v-btn {
-    color: var(--Black, #000);
+    color: gray;
     text-align: right;
     font-family: 'General Sans Medium';
     font-size: 16px;
@@ -44,17 +44,11 @@
   }
 
   .navbar-menu-home .v-btn:hover {
-    background: linear-gradient(90deg, #000 0.75%, #fc6200 59.42%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+   color: #0D0D0D;
   }
 
   .navbar-menu-home .isActive {
-    background: linear-gradient(90deg, #000 0.75%, #fc6200 59.42%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #0D0D0D;
   }
 
   /* Further adjustments for smaller screens */

@@ -17,7 +17,7 @@ export default defineConfig({
   vite: {
     ssr: {
       noExternal: [/\.css$/, /^vuetify/],
-    },
+    },   
     // server: {
     //   host: '0.0.0.0',
     //   port: 4201
@@ -27,5 +27,5 @@ export default defineConfig({
     // Ensure HTML is enabled in markdown-it
     html: true
   },
-  cleanUrls: true,
+  cleanUrls: true 
 })

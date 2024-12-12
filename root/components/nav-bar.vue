@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useDisplay } from 'vuetify';
+import { jwtDecode } from 'jwt-decode';
 import ReusableNavbar from './reusable-component/reusable-navbar.vue';
 
 // Initialize Vuetify's display service
@@ -12,14 +13,19 @@ const { mdAndUp } = useDisplay();
 const drawer = ref(false);
 
 const isAuthenticated = ref(false);
+const userRole = ref('user');
 
 const menuItems = ref([
-  // { title: 'Home', link: '/' },
+  { title: 'Home', link: '/home', showIf: () => isAuthenticated.value },
   // { title: 'Solutions', link: '/solutions' },
   // { title: 'Pricing', link: '/pricing' },
   // { title: 'Blog', link: '/blog' },
   // { title: 'Contact Us', link: '/contact-us' }
 ]);
+
+const filteredMenuItems = computed(() => 
+  menuItems.value.filter(item => item.showIf())
+);
 
 const navBarMenuClass = ref('navbar-menu-home');
 
@@ -60,6 +66,15 @@ onMounted(() => {
   const token = localStorage.getItem('authToken');
   if (!!token) {
     isAuthenticated.value = true;
+    try {
+      // Decode the token to extract the role
+      const decodedToken = jwtDecode(token);
+      userRole.value = decodedToken.role || 'user';
+    } catch (error) {
+      //console.error('Error decoding token:', error);
+      isAuthenticated.value = false;
+      userRole.value = 'user';
+    }
   }
 });
 
@@ -80,14 +95,14 @@ const isMdAndUp = computed(() => mdAndUp.value);
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="flex-grow-1 justify-center align-center" v-if="isMdAndUp">
-        <ReusableNavbar :class="navBarMenuClass" :menuItems="menuItems" :currentPath="currentPath">
+        <ReusableNavbar :class="navBarMenuClass" :menuItems="filteredMenuItems" :currentPath="currentPath">
         </ReusableNavbar>
       </v-toolbar-items>
       <v-spacer></v-spacer>
       <!-- Desktop Menu Items -->
       <v-toolbar-items class="flex-grow-1 ga-5 pr-5 justify-end align-center" v-if="isMdAndUp">
         <!-- <v-btn flat class="login-btn">Login</v-btn> -->
-        <v-btn v-if="isAuthenticated" flat href="/register" class="elevation-0 sign-out-btn">
+        <v-btn v-if="isAuthenticated && userRole === 'admin'" flat href="/register" class="elevation-0 sign-out-btn">
           <span style="margin-right: 5px">User Register</span>
         </v-btn>
         <v-btn v-if="isAuthenticated" @click="signout" flat href="/" class="elevation-0 sign-out-btn">
@@ -104,7 +119,7 @@ const isMdAndUp = computed(() => mdAndUp.value);
     </v-app-bar>
     <!-- Mobile Navigation Drawer -->
     <v-navigation-drawer v-model="drawer" app temporary>
-      <ReusableNavbar :class="navBarMenuClass" :menuItems="menuItems" :currentPath="currentPath" />
+      <ReusableNavbar :class="navBarMenuClass" :menuItems="filteredMenuItems" :currentPath="currentPath" />
       <v-divider></v-divider>
       <!-- <v-btn flat class="login-btn">Login</v-btn> -->
       <v-btn v-if="isAuthenticated" flat href="/register" class="elevation-0 sign-out-btn">
