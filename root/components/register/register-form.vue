@@ -16,6 +16,7 @@ const snackbarMessage = ref('');
 const snackbarColor = ref('');
 
 const isSubmitting = ref(false);
+const showPassword = ref(false);
 
 const formData = ref({
   name: '',
@@ -58,7 +59,7 @@ const submitRegisterForm = async () => {
     isSubmitting.value = true;
     try {
       const token = localStorage.getItem('authToken');
-        if (!token) throw new Error('User not authenticated.');        
+      if (!token) throw new Error('User not authenticated.');
 
       // Make the POST request
       const response = await axios.post(
@@ -125,7 +126,9 @@ const submitRegisterForm = async () => {
         <v-text-field variant="underlined" v-model="formData.email" label="Email Address"
           :error-messages="errors.email ? [errors.email] : []" @input="errors.email = rules.email(formData.email)"
           required />
-        <v-text-field variant="underlined" v-model="formData.password" label="Password" class="w-100" type="password"
+        <v-text-field variant="underlined" v-model="formData.password" :type="showPassword ? 'text' : 'password'"
+          label="Password" class="w-100" @click:append-inner="showPassword = !showPassword"
+          :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :error-messages="errors.password ? [errors.password] : []"
           @input="errors.password = rules.password(formData.password)" required />
         <v-select variant="underlined" v-model="formData.role" :items="['admin', 'user']" label="Role"
@@ -194,7 +197,11 @@ const submitRegisterForm = async () => {
 }
 
 /* Further adjustments for smaller screens */
-@media screen and (max-width: 768px) {}
+@media screen and (max-width: 768px) {
+  .register-form {
+    padding: 50px 65px;
+  }
+}
 
 @media screen and (max-width: 480px) {}
 </style>

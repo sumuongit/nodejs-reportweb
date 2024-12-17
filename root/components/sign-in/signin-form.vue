@@ -20,6 +20,7 @@ const snackbarMessage = ref('');
 const snackbarColor = ref('');
 
 const isSubmitting = ref(false);
+const showPassword = ref(false);
 
 const formData = ref({
   username: '',
@@ -118,7 +119,9 @@ const submitSigninForm = async () => {
         <v-text-field variant="underlined" v-model="formData.email" label="Email Address"
           :error-messages="errors.email ? [errors.email] : []" @input="errors.email = rules.email(formData.email)"
           required />
-        <v-text-field variant="underlined" v-model="formData.password" label="Password" class="w-100" type="password"
+        <v-text-field variant="underlined" v-model="formData.password" :type="showPassword ? 'text' : 'password'"
+          label="Password" class="w-100" @click:append-inner="showPassword = !showPassword"
+          :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :error-messages="errors.password ? [errors.password] : []"
           @input="errors.password = rules.password(formData.password)" required />
         <div class="d-flex justify-center">
@@ -184,7 +187,11 @@ const submitSigninForm = async () => {
 }
 
 /* Further adjustments for smaller screens */
-@media screen and (max-width: 768px) {}
+@media screen and (max-width: 768px) {
+  .signin-form {
+    padding: 50px 65px;
+  }
+}
 
 @media screen and (max-width: 480px) {}
 </style>

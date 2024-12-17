@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import BaseLayout from './layout/base-layout.vue';
 import Home from './home/home.vue';
 </script>
@@ -9,4 +9,4 @@ import Home from './home/home.vue';
   </BaseLayout>
 </template>
 
-<style scoped></style>
+<style scoped></style> -->

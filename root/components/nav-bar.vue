@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useDisplay } from 'vuetify';
+import { useRoute } from 'vitepress';
 import { jwtDecode } from 'jwt-decode';
 import ReusableNavbar from './reusable-component/reusable-navbar.vue';
 
@@ -8,12 +9,18 @@ import ReusableNavbar from './reusable-component/reusable-navbar.vue';
 //const display = useDisplay();
 
 const { mdAndUp } = useDisplay();
+const route = useRoute();
 
 // Define the drawer state as a reactive variable
 const drawer = ref(false);
 
 const isAuthenticated = ref(false);
 const userRole = ref('user');
+
+const isRegisterButtonActive = computed(() => route.path === '/register');
+const handleRegisterClick = () => {
+  isRegisterButtonActive.value = true;
+};
 
 const menuItems = ref([
   { title: 'Home', link: '/home', showIf: () => isAuthenticated.value },
@@ -23,7 +30,7 @@ const menuItems = ref([
   // { title: 'Contact Us', link: '/contact-us' }
 ]);
 
-const filteredMenuItems = computed(() => 
+const filteredMenuItems = computed(() =>
   menuItems.value.filter(item => item.showIf())
 );
 
@@ -90,19 +97,21 @@ const isMdAndUp = computed(() => mdAndUp.value);
 <template>
   <v-app>
     <v-app-bar app flat color="transparent">
-      <v-toolbar-title class="flex-grow-1 justify-start align-center">
-        A1 Polymer Power BI Report
+      <v-toolbar-title class="flex-grow-tt justify-start align-center title">
+        <span style="font-weight: bold;">Path Point:</span> A1 Polymer Power BI Report
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items class="flex-grow-1 justify-center align-center" v-if="isMdAndUp">
+      <v-spacer class="flex-grow-vs"></v-spacer>
+      <v-toolbar-items class="flex-grow-tim justify-center align-center" v-if="isMdAndUp">
         <ReusableNavbar :class="navBarMenuClass" :menuItems="filteredMenuItems" :currentPath="currentPath">
         </ReusableNavbar>
       </v-toolbar-items>
-      <v-spacer></v-spacer>
+      <v-spacer class="flex-grow-vs"></v-spacer>
       <!-- Desktop Menu Items -->
-      <v-toolbar-items class="flex-grow-1 ga-5 pr-5 justify-end align-center" v-if="isMdAndUp">
+      <v-toolbar-items class="flex-grow-tir ga-5 pr-5 justify-end align-center" v-if="isMdAndUp">
         <!-- <v-btn flat class="login-btn">Login</v-btn> -->
-        <v-btn v-if="isAuthenticated && userRole === 'admin'" flat href="/register" class="elevation-0 sign-out-btn">
+        <v-btn v-if="isAuthenticated && userRole === 'admin'" :class="{ 'active-register-btn': isRegisterButtonActive }"
+          :style="{ backgroundColor: isRegisterButtonActive ? '#4169E1' : '' }" flat href="/register"
+          class="elevation-0 register-btn">
           <span style="margin-right: 5px">User Register</span>
         </v-btn>
         <v-btn v-if="isAuthenticated" @click="signout" flat href="/" class="elevation-0 sign-out-btn">
@@ -122,7 +131,9 @@ const isMdAndUp = computed(() => mdAndUp.value);
       <ReusableNavbar :class="navBarMenuClass" :menuItems="filteredMenuItems" :currentPath="currentPath" />
       <v-divider></v-divider>
       <!-- <v-btn flat class="login-btn">Login</v-btn> -->
-      <v-btn v-if="isAuthenticated" flat href="/register" class="elevation-0 sign-out-btn">
+      <v-btn v-if="isAuthenticated && userRole === 'admin'" :class="{ 'active-register-btn': isRegisterButtonActive }"
+        :style="{ backgroundColor: isRegisterButtonActive ? '#4169E1' : '' }" flat href="/register"
+        class="elevation-0 register-btn">
         <span style="margin-right: 5px">User Register</span>
       </v-btn>
       <v-btn v-if="isAuthenticated" @click="signout" flat href="/" class="sign-out-btn">
@@ -148,7 +159,8 @@ const isMdAndUp = computed(() => mdAndUp.value);
   display: none;
 }
 
-.sign-out-btn {
+.sign-out-btn,
+.register-btn {
   color: var(--Black, #000);
   font-family: 'General Sans Medium';
   font-size: 16px;
@@ -168,16 +180,46 @@ const isMdAndUp = computed(() => mdAndUp.value);
   color: var(--Black, #000);
 }
 
+.register-btn:hover {
+  color: #FFF;
+  background-color: #4169E1;
+}
+
+.active-register-btn {
+  color: white;
+  background-color: #4169E1 !important;
+  pointer-events: none;
+}
+
 .logo {
   width: 169px;
 }
 
-.v-toolbar-title {
-  flex: 1 1 auto;
+.flex-grow-tt,
+.flex-grow-vs,
+.flex-grow-tim,
+.flex-grow-tir {
+  flex: 1 1 20% !important;
 }
 
 /* Adjust size for a 1280px screen */
-@media screen and (max-width: 1280px) {}
+@media screen and (max-width: 1280px) {
+  .flex-grow-tt {
+    flex: 1 1 25% !important;
+  }
+
+  .flex-grow-vs {
+    flex: 12.5% !important;
+  }
+
+  .flex-grow-tim {
+    flex: 1 1 25% !important;
+  }
+
+  .flex-grow-tir {
+    flex: 1 1 25% !important;
+  }
+}
 
 /* Further adjustments for smaller screens */
 @media screen and (max-width: 768px) {
@@ -185,8 +227,30 @@ const isMdAndUp = computed(() => mdAndUp.value);
     display: block;
   }
 
-  .sign-out-btn {
+  .sign-out-btn,
+  .register-btn {
     margin-left: 18px;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .flex-grow-tt {
+    flex: 1 1 80% !important;
+  }
+
+  .flex-grow-vs {
+    flex: unset !important;
+  }
+
+  .flex-grow-tim {
+    flex: unset !important;
+  }
+
+  .flex-grow-tir {
+    flex: 1 1 20% !important;
   }
 }
 

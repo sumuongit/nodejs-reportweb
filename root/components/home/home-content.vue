@@ -7,7 +7,7 @@ const snackbar = ref(false);
 const snackbarMessage = ref('');
 const snackbarColor = ref('');
 const isFetching = ref(false);
-const iframeHtmlContent = ref(''); // Holds the Power BI HTML content
+const iframeHtmlContent = ref('');
 
 const fetchReportContent = async () => {
     isFetching.value = true;
@@ -24,7 +24,7 @@ const fetchReportContent = async () => {
 
         // Check if the response contains the URL
         if (response.status === 200 && response.data.url) {
-            iframeHtmlContent.value = response.data.url; // Use the URL instead of raw HTML
+            iframeHtmlContent.value = response.data.url;
             snackbarMessage.value = 'Report loaded successfully!';
             snackbarColor.value = 'success';
         } else {
@@ -45,7 +45,8 @@ const fetchReportContent = async () => {
 <template>
     <div class="d-flex flex-column justify-center align-center ga-5">
         <div class="d-flex flex-column justify-center align-center ga-5 hero-container">
-            <v-btn density="default" :loading="isFetching" @click="fetchReportContent" class="elevation-0 hero-btn">
+            <v-btn v-if="!iframeHtmlContent" density="default" :loading="isFetching" @click="fetchReportContent"
+                class="elevation-0 hero-btn">
                 <span style="margin-right: 5px">Access Report</span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path
@@ -69,112 +70,6 @@ const fetchReportContent = async () => {
         <iframe style="width: 100%; height: 500px;" frameborder="0" :src="iframeHtmlContent"></iframe>
     </div>
 </template>
-
-<!-- <template>
-    <div>        
-        <v-btn :loading="isFetching" @click="fetchReportContent">
-            Load Report
-        </v-btn>
-      
-        <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="3000">
-            {{ snackbarMessage }}
-        </v-snackbar>
-       
-        <div v-if="iframeHtmlContent">
-            <iframe style="width: 100%; height: 500px;" frameborder="0" :src="iframeHtmlContent"></iframe>
-        </div>
-    </div>
-</template> -->
-
-<!-- <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
-
-let baseUrl = '';
-if (import.meta.env.MODE === 'development') {
-    baseUrl = import.meta.env.VITE_DEV_BASE_URL;
-} else if (import.meta.env.MODE === 'production') {
-    baseUrl = import.meta.env.VITE_PRO_BASE_URL;
-} else {
-    console.log('Running client in unknown or development mode');
-    baseUrl = import.meta.env.VITE_DEV_BASE_URL || '';
-}
-
-const snackbar = ref(false);
-const snackbarMessage = ref('');
-const snackbarColor = ref('');
-
-const isFetching = ref(false);
-const reportUrl = ref('');
-
-const fetchReportUrl = async () => {
-    isFetching.value = true;
-    try {
-        const token = localStorage.getItem('authToken');
-        if (!token) throw new Error('User not authenticated.');
-
-        const response = await axios.get(`${baseUrl}/api/report/read`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        if (response.data?.url) {
-            reportUrl.value = response.data.url;
-            snackbarMessage.value = 'Report URL fetched successfully!';
-            snackbarColor.value = 'success';
-            snackbar.value = true;
-        } else {
-            throw new Error('Invalid report URL received.');
-        }
-    } catch (error) {
-        console.error('Error fetching report:', error);
-
-        if (error.response) {
-            snackbarMessage.value = error.response.data.message || 'Failed to fetch the report.';
-        } else if (error.request) {
-            snackbarMessage.value = 'Server did not respond. Please check your connection.';
-        } else {
-            snackbarMessage.value = 'An unexpected error occurred.';
-        }
-
-        snackbarColor.value = 'error';
-        snackbar.value = true;
-    } finally {
-        isFetching.value = false;
-    }
-};
-</script>
-
-<template>
-    <div class="hero">
-        <div class="d-flex flex-column justify-center align-center ga-5 hero-container">
-            <v-btn density="default" :loading="isFetching" @click="fetchReportUrl" class="elevation-0 hero-btn">
-                <span style="margin-right: 5px">Access Report</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path
-                        d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM16.6919 12.2871C16.6539 12.3791 16.599 12.462 16.53 12.531L13.53 15.531C13.384 15.677 13.192 15.751 13 15.751C12.808 15.751 12.616 15.678 12.47 15.531C12.177 15.238 12.177 14.763 12.47 14.47L14.1899 12.75H8C7.586 12.75 7.25 12.414 7.25 12C7.25 11.586 7.586 11.25 8 11.25H14.189L12.469 9.53003C12.176 9.23703 12.176 8.76199 12.469 8.46899C12.762 8.17599 13.237 8.17599 13.53 8.46899L16.53 11.469C16.599 11.538 16.6539 11.6209 16.6919 11.7129C16.7679 11.8969 16.7679 12.1031 16.6919 12.2871Z"
-                        fill="url(#paint0_linear_4961_9599)" />
-                    <defs>
-                        <linearGradient id="paint0_linear_4961_9599" x1="3.30567" y1="-1.97616" x2="27.2872"
-                            y2="5.89878" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#F5FDFF" />
-                            <stop offset="1" stop-color="#F5FDFF" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-            </v-btn>
-            <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="3000">
-                {{ snackbarMessage }}
-            </v-snackbar>
-
-            <div v-if="reportUrl">
-                <iframe id="report-iframe" style="width: 100%; height: 500px;" :src="reportUrl"
-                    frameborder="0"></iframe>
-            </div>
-        </div>
-    </div>
-</template> -->
 
 <style scoped>
 .hero {

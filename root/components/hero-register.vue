@@ -44,7 +44,7 @@
 /* Adjust size for a 1280px screen */
 @media screen and (max-width: 1280px) {
   .hero {
-    margin-top: 50px;
+    margin-top: 75px;
   }
 }
 

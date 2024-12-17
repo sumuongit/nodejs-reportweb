@@ -204,7 +204,7 @@ body {
 
 
 body {
-  overflow-x: hidden; 
+  overflow-x: hidden;
 }
 
 img {
@@ -213,7 +213,7 @@ img {
 }
 
 .container {
-  overflow-x: hidden;  
+  overflow-x: hidden;
 }
 
 /* CUSTOM STYLE FOR EXPANSION PANELS */
@@ -234,7 +234,7 @@ img {
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 20px;   
+  line-height: 20px;
   width: 250px;
 }
 
@@ -247,20 +247,24 @@ img {
   line-height: 20px;
 }
 
-.v-btn--active:hover > .v-btn__overlay {
+.v-btn--active:hover>.v-btn__overlay {
   opacity: 0;
 }
 
-.v-btn:hover > .v-btn__overlay {
+.v-btn:hover>.v-btn__overlay {
   opacity: 0;
 }
 
-.v-btn--active > .v-btn__overlay {
+.v-btn--active>.v-btn__overlay {
   opacity: 0;
 }
 
 /* Adjust size for a 1280px screen */
-@media screen and (max-width: 1280px) {}
+@media screen and (max-width: 1280px) {
+  .v-toolbar-title__placeholder {
+    overflow: unset !important;
+  }
+}
 
 /* Further adjustments for smaller screens */
 @media screen and (max-width: 768px) {
