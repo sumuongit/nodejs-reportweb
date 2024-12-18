@@ -19,6 +19,15 @@ class UserService {
             return { success: false, message: err.message };
         }
     }
+
+    async forgotPassword(email) {
+        try {
+            const result = await userData.forgotPassword(email);
+            return result; 
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    }
 }
 
 module.exports = UserService;

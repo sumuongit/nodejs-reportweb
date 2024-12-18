@@ -54,39 +54,12 @@ app.get('/api/report/read', async (req, res) => {
 
         const powerBiUrl = "https://app.powerbi.com/view?r=eyJrIjoiYjJkZjQxNzAtY2U1My00OWMyLTk5YWYtOGUyMjkxZmQyZDM5IiwidCI6ImM5Y2NlOGY1LWJjOTgtNDU4Yi04NmE0LWZlYWMwZjcyODc4MyIsImMiOjEwfQ%3D%3D";
 
-        // Return the Power BI URL to the frontend
         res.status(200).send({ url: powerBiUrl });
     } catch (error) {
         console.error('Error fetching Power BI report:', error.message);
         res.status(500).send({ message: 'Failed to fetch report content.' });
     }
 });
-
-// app.get('/api/report/read', async (req, res) => {
-//     try {
-//         const authToken = req.headers.authorization;
-
-//         // Authenticate the user if necessary
-//         if (!authToken) {
-//             return res.status(401).send({ message: 'Unauthorized' });
-//         }
-
-//         // Fetch the report URL from Power BI API or configuration
-//         const powerBiUrl = "https://app.powerbi.com/view?r=eyJrIjoiYjJkZjQxNzAtY2U1My00OWMyLTk5YWYtOGUyMjkxZmQyZDM5IiwidCI6ImM5Y2NlOGY1LWJjOTgtNDU4Yi04NmE0LWZlYWMwZjcyODc4MyIsImMiOjEwfQ%3D%3D";
-
-//         // Use a secure backend HTTP request
-//         const response = await axios.get(powerBiUrl, {
-//             responseType: 'stream', // Stream the content
-//         });
-
-//         // Stream the Power BI content to the client
-//         res.setHeader('Content-Type', 'text/html');
-//         response.data.pipe(res);
-//     } catch (error) {
-//         console.error('Error fetching Power BI report:', error.message);
-//         res.status(500).send({ message: 'Failed to fetch report content.' });
-//     }
-// });
 
 // app.post('/api/send-email', async (req, res) => {
 //     const { name, designation, email, phoneNumber, message, companyName, industryName } = req.body;
@@ -111,10 +84,6 @@ app.get('*', (req, res) => {
 
 mongoose.connect(mongoDbString);
 const database = mongoose.connection;
-// database.on('error', (error) => {
-//     console.log(error);
-// })
-
 database.on('error', (error) => {
     console.error('Database connection error:', error);
 });

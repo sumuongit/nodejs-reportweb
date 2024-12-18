@@ -115,7 +115,7 @@ const submitSigninForm = async () => {
 <template>
   <div class="d-flex justify-center mt-16 wrapper">
     <v-form>
-      <div class="d-flex flex-column ga-5 signin-form">
+      <div class="d-flex flex-column align-center ga-5 signin-form">
         <v-text-field variant="underlined" v-model="formData.email" label="Email Address"
           :error-messages="errors.email ? [errors.email] : []" @input="errors.email = rules.email(formData.email)"
           required />
@@ -140,8 +140,9 @@ const submitSigninForm = async () => {
                 </linearGradient>
               </defs>
             </svg>
-          </v-btn>
+          </v-btn>          
         </div>
+        <a href="/forgot-password" style="font-size: 14px; text-decoration: none;">Forgot password?</a>
       </div>
       <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="3000">
         {{ snackbarMessage }}
@@ -179,10 +180,14 @@ const submitSigninForm = async () => {
   background: #0D0D0D;
 }
 
+.signin-btn:hover {
+  opacity: 0.8;
+}
+
 /* Adjust size for a 1280px screen */
 @media screen and (max-width: 1280px) {
   .wrapper {
-    margin-top: 20px !important;
+    margin: 20px !important;
   }
 }
 

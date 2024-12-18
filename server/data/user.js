@@ -18,6 +18,15 @@ class UserData {
             return { success: false, message: err.message };
         }
     }
+
+    async forgotPassword(email) {
+        try {
+            const result = await usermodel.findOne(email);
+            return result;
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    }
 }
 
 module.exports = UserData;

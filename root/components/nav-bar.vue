@@ -234,7 +234,7 @@ const isMdAndUp = computed(() => mdAndUp.value);
   }
 
   .title {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .flex-grow-tt {

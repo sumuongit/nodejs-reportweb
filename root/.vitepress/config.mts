@@ -5,7 +5,7 @@ export default defineConfig({
   title: "Path Point: A1 Polymer Power BI Report",
   description: "A1 Polymer Power BI Report",
   head: [
-    ['link', { rel: 'icon', href: '/favicon.ico' }],
+    ['link', { rel: 'icon', href: '/favicon.svg' }],
 
     // For PNG favicon
     //['link', { rel: 'icon', type: 'image/png', href: '/images/favicon.png', sizes: '105x96' }]

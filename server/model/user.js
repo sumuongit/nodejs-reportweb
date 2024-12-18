@@ -28,7 +28,9 @@ const userSchema = new mongoose.Schema({
     createdAt: {
         default: Date.now,
         type: Date
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 })
 
 userSchema.methods.comparePassword = function(password) {

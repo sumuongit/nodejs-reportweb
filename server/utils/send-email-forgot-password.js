@@ -20,21 +20,8 @@ module.exports = async (emailObj) => {
             from: emailObj.email,
             to: emailObj.email,
             host: process.env.SMTP_HOST,
-            subject: `Welcome to https://powerbi.a1polymer.com where your registration was successful`,
-            html: `
-                <div>
-                    Name:
-                    <strong>${emailObj.name}</strong>
-                </div>                 
-                <div>
-                    Email Address:
-                    <strong> ${emailObj.email}</strong>
-                </div>                
-                <div>
-                    Password:
-                    <strong>${emailObj.password}</strong>
-                </div>                 
-            `,
+            subject: `Password Reset Request`,
+            html: `<p>Click <a href="${emailObj.resetPasswordUrl}">here</a> to reset your password. This link expires in 1 hour.</p>`                
         };
         return await transporter.sendMail(mailOptions);
     } catch (err) {

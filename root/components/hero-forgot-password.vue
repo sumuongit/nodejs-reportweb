@@ -4,13 +4,13 @@
   <div class="hero">
     <div class="d-flex flex-column justify-center align-center ga-5">
       <div class="d-flex flex-column" data-aos="fade-up" data-aos-delay="200">
-        <div class="hero-title">Register</div>
+        <div class="hero-title">Forgot Password</div>
       </div>
       <div class="hero-sub-title" data-aos="fade-up" data-aos-delay="300">
-        Please enter user information
+        Please enter your email
       </div>
       <div class="hero-sub-title-two" data-aos="fade-up" data-aos-delay="300">
-        Upon successful registration, users will receive an email with their sign-in credentials.
+        Upon successfully retrieving your account email, you will receive an email with a link to reset your password.
       </div>
     </div>
   </div>
