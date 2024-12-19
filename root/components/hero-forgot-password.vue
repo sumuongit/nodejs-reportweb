@@ -7,10 +7,10 @@
         <div class="hero-title">Forgot Password</div>
       </div>
       <div class="hero-sub-title" data-aos="fade-up" data-aos-delay="300">
-        Please enter your email
+        Please enter your email address
       </div>
       <div class="hero-sub-title-two" data-aos="fade-up" data-aos-delay="300">
-        Upon successfully retrieving your account email, you will receive an email with a link to reset your password.
+        Upon successfully retrieving your account email address, you will receive an email with a link to reset your password.
       </div>
     </div>
   </div>

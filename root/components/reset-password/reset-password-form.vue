@@ -1,6 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import { useRouter, useRoute } from 'vitepress';
+
+const router = useRouter();
+const route = useRoute();
 
 let baseUrl = '';
 if (import.meta.env.MODE === 'development') {
@@ -43,6 +47,10 @@ const rules = {
   confirmPassword: value => {
     if (!value) return 'Confirm Password is required';
 
+    if (value !== formData.value.password) {
+      return 'Passwords do not match';
+    }
+
     // Check if password meets the criteria
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
     return passwordPattern.test(value)
@@ -62,13 +70,28 @@ const validateForm = () => {
   return isValid;
 };
 
+const getTokenFromUrl = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('token');
+};
+
 const submitResetPasswordForm = async () => {
+  const token = route.query?.token || getTokenFromUrl(); 
+
+  if (!token) {    
+    snackbarMessage.value = 'Invalid or missing token.';
+    snackbarColor.value = 'error';
+    snackbar.value = true;
+    return;
+  }
+
   if (validateForm()) {
     isSubmitting.value = true;
     try {
       const response = await axios.post(
         `${baseUrl}/api/auth/resetPassword`,
         {
+          token: token,
           newPassword: formData.value.password
         },
         {
@@ -82,6 +105,7 @@ const submitResetPasswordForm = async () => {
         snackbarMessage.value = 'Password reset successfully!';
         snackbarColor.value = 'success';
         snackbar.value = true;
+        router.go('/');
       } else {
         throw new Error('Password not reset. Please try again.');
       }
@@ -123,7 +147,7 @@ const submitResetPasswordForm = async () => {
     <v-form>
       <div class="d-flex flex-column align-center ga-5 reset-password-form">
         <v-text-field variant="underlined" v-model="formData.password" :type="showPassword ? 'text' : 'password'"
-          label="Password" class="w-100" @click:append-inner="showPassword = !showPassword"
+          label="New Password" class="w-100" @click:append-inner="showPassword = !showPassword"
           :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :error-messages="errors.password ? [errors.password] : []"
           @input="errors.password = rules.password(formData.password)" required />

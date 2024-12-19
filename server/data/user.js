@@ -27,6 +27,19 @@ class UserData {
             return { success: false, message: err.message };
         }
     }
+
+    async resetPassword({ resetPasswordToken, resetPasswordExpires }) {
+        try {
+            const result = await usermodel.findOne({
+                resetPasswordToken: resetPasswordToken,
+                resetPasswordExpires: resetPasswordExpires
+            }
+            );
+            return result;
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    }
 }
 
 module.exports = UserData;

@@ -2,6 +2,7 @@
 const jsonwebtoken = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const mailChecker = require('mailchecker');
+const crypto = require('crypto');
 const usermodel = require('../model/user');
 const sendEmail = require('../../server/utils/send-email');
 const sendEmailForgotPassword = require('../../server/utils/send-email-forgot-password');
@@ -152,11 +153,19 @@ exports.resetPassword = async function (req, res) {
     try {
         const { token, newPassword } = req.body;
 
+        // Validate input
+        if (!token || !newPassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'Token and new password are required.'
+            });
+        }
+
         // Hash the token to match the stored hash
         const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
 
-        // Find the user by the token and check expiration
-        const user = await user.findOne({
+        // Find the user by the token and check expiration        
+        const user = await userService.resetPassword({
             resetPasswordToken: tokenHash,
             resetPasswordExpires: { $gt: Date.now() } // Ensure token is not expired
         });
@@ -168,8 +177,10 @@ exports.resetPassword = async function (req, res) {
             });
         }
 
-        // Update the user's password
-        user.password = newPassword; // Hash the password before saving
+        // Hash the new password
+        user.hash_password = bcryptjs.hashSync(newPassword, 10);
+
+        // Clear reset token and expiration
         user.resetPasswordToken = undefined;
         user.resetPasswordExpires = undefined;
         await user.save();
