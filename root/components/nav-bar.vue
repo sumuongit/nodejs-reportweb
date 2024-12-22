@@ -3,6 +3,8 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useDisplay } from 'vuetify';
 import { useRoute } from 'vitepress';
 import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 import ReusableNavbar from './reusable-component/reusable-navbar.vue';
 
 // Initialize Vuetify's display service
@@ -18,9 +20,6 @@ const isAuthenticated = ref(false);
 const userRole = ref('user');
 
 const isRegisterButtonActive = computed(() => route.path === '/register');
-const handleRegisterClick = () => {
-  isRegisterButtonActive.value = true;
-};
 
 const menuItems = ref([
   { title: 'Home', link: '/home', showIf: () => isAuthenticated.value },
@@ -41,6 +40,7 @@ const currentPath = ref('');
 
 const signout = () => {
   localStorage.removeItem('authToken');
+  Cookies.remove('refreshToken');
 }
 
 // Click handler to close the drawer
@@ -63,7 +63,18 @@ const handleOutsideClick = () => {
   }
 };
 
-onMounted(() => {
+const isTokenExpired = (token) => {
+  try {
+    const payload = jwtDecode(token);
+    const currentTime = Math.floor(Date.now() / 1000);
+    return payload.exp < currentTime;
+  } catch (error) {
+    // console.error('Invalid token format:', error);
+    return true;
+  }
+};
+
+onMounted(async () => {
   if (typeof window !== 'undefined') {
     currentPath.value = window.location.pathname;
   }
@@ -71,16 +82,20 @@ onMounted(() => {
   document.addEventListener('click', handleOutsideClick);
 
   const token = localStorage.getItem('authToken');
-  if (!!token) {
-    isAuthenticated.value = true;
-    try {
-      // Decode the token to extract the role
+
+  if (token) {
+    if (!isTokenExpired(token)) {
       const decodedToken = jwtDecode(token);
+      isAuthenticated.value = true;
       userRole.value = decodedToken.role || 'user';
-    } catch (error) {
-      //console.error('Error decoding token:', error);
-      isAuthenticated.value = false;
-      userRole.value = 'user';
+    } else {
+      const refreshToken = Cookies.get('refreshToken');
+      if (!refreshToken) throw new Error('No refresh token found.');
+      const refreshResponse = await axios.post('/api/auth/refreshToken', { refreshToken });
+      localStorage.setItem('authToken', refreshResponse.data.token);
+      const decodedToken = jwtDecode(token);
+      isAuthenticated.value = true;
+      userRole.value = decodedToken.role || 'user';
     }
   }
 });

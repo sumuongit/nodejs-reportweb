@@ -1,40 +1,72 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vitepress';
+import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
 
-// State variables
+const router = useRouter();
+
 const snackbar = ref(false);
 const snackbarMessage = ref('');
 const snackbarColor = ref('');
 const isFetching = ref(false);
 const iframeHtmlContent = ref('');
 
+const isTokenExpired = (token) => {
+    try {
+        const payload = jwtDecode(token);
+        const currentTime = Math.floor(Date.now() / 1000);
+        return payload.exp < currentTime;
+    } catch (error) {
+        //console.error('Invalid token format:', error);
+        return true;
+    }
+};
+
 const fetchReportContent = async () => {
     isFetching.value = true;
     try {
         const token = localStorage.getItem('authToken');
-        if (!token) throw new Error('User not authenticated.');
+        if (token && isTokenExpired(token)) throw new Error('Token expired. Please log in again.');
 
-        // Call the backend API to get the Power BI URL
         const response = await axios.get('/api/report/read', {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
         });
 
-        // Check if the response contains the URL
         if (response.status === 200 && response.data.url) {
             iframeHtmlContent.value = response.data.url;
-            snackbarMessage.value = 'Report loaded successfully!';
-            snackbarColor.value = 'success';
+            //snackbarMessage.value = 'Report loaded successfully!';
+            //snackbarColor.value = 'success';
         } else {
             throw new Error('Invalid response from server.');
         }
     } catch (error) {
-        console.error('Error fetching report:', error);
-        snackbarMessage.value =
-            error.response?.data?.message || 'Failed to fetch report content.';
-        snackbarColor.value = 'error';
+        try {
+            const refreshToken = Cookies.get('refreshToken');
+            const refreshResponse = await axios.post('/api/auth/refreshToken', { refreshToken });
+            localStorage.setItem('authToken', refreshResponse.data.token);
+
+            const retryResponse = await axios.get('/api/report/read', {
+                headers: {
+                    'Authorization': `Bearer ${refreshResponse.data.token}`,
+                },
+            });
+
+            if (retryResponse.status === 200 && retryResponse.data.url) {
+                iframeHtmlContent.value = retryResponse.data.url;
+                //snackbarMessage.value = 'Report loaded successfully!';
+                //snackbarColor.value = 'success';
+            } else {
+                throw new Error('Invalid response from server after refresh.');
+            }
+        } catch {
+            localStorage.removeItem('authToken');
+            Cookies.remove('refreshToken');
+            router.go('/');
+        }
     } finally {
         snackbar.value = true;
         isFetching.value = false;

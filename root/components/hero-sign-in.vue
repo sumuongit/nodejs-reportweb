@@ -18,7 +18,7 @@
   position: relative;
   display: flex;
   justify-content: center;
-  margin-top: 200px;
+  margin-top: 200px;  
 }
 
 .hero-title {

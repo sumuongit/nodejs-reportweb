@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vitepress';
+import Cookies from 'js-cookie';
 
 const router = useRouter();
 
@@ -70,8 +71,10 @@ const submitSigninForm = async () => {
       );
 
       const token = response.data.token;
+      const refreshToken = response.data.refreshToken;
       if (token) {
         localStorage.setItem('authToken', token);
+        Cookies.set('refreshToken', refreshToken, { secure: process.env.NODE_ENV === 'productions', sameSite: 'Strict' });
         snackbarMessage.value = 'You have signed in successfully!';
         snackbarColor.value = 'success';
         snackbar.value = true;
@@ -140,7 +143,7 @@ const submitSigninForm = async () => {
                 </linearGradient>
               </defs>
             </svg>
-          </v-btn>          
+          </v-btn>
         </div>
         <a href="/forgot-password" style="font-size: 14px; text-decoration: none;">Forgot password?</a>
       </div>

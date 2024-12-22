@@ -1,11 +1,11 @@
 <script setup>
 import BaseLayout from './layout/base-layout.vue';
-import Signin from './sign-in/sign-in.vue';
+import Register from './register/register.vue';
 </script>
 
 <template>
   <BaseLayout>
-    <Signin></Signin>
+    <Register></Register>
   </BaseLayout>
 </template>
 

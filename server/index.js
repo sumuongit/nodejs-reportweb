@@ -61,21 +61,6 @@ app.get('/api/report/read', async (req, res) => {
     }
 });
 
-// app.post('/api/send-email', async (req, res) => {
-//     const { name, designation, email, phoneNumber, message, companyName, industryName } = req.body;
-//     try {
-//         const sent = await sendEmail({ name, designation, email, phoneNumber, message, companyName, industryName });
-
-//         if (sent.error) {
-//             return res.status(500).json({ error: 'Error sending email' });
-//         }
-//         return res.status(200).json({ message: 'Email sent successfully' });
-//     } catch (error) {
-//         console.error('Error sending email:', error);
-//         return res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
-
 // Catch-all route to serve the index.html for any undefined routes (single-page app fallback)
 app.get('*', (req, res) => {
     //res.sendFile(path.join(__dirname, '..', 'root', '.vitepress', 'dist', 'index.html'));

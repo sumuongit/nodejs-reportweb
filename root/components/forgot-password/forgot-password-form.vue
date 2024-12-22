@@ -105,7 +105,8 @@ const submitForgotPasswordForm = async () => {
 </script>
 
 <template>
-  <div class="d-flex justify-center mt-16 wrapper">
+  <div class="d-flex flex-column justify-center align-center ga-5">
+    <div class="d-flex flex-column justify-center align-center mt-16 wrapper"> 
     <v-form>
       <div class="d-flex flex-column align-center ga-5 fetch-email-form">
         <v-text-field variant="underlined" v-model="formData.email" label="Email Address"
@@ -135,6 +136,7 @@ const submitForgotPasswordForm = async () => {
         {{ snackbarMessage }}
       </v-snackbar>
     </v-form>
+  </div>
   </div>
 </template>
 
@@ -171,18 +173,10 @@ const submitForgotPasswordForm = async () => {
   opacity: 0.8;
 }
 
-.v-form {
-  width: 22.5%;
-}
-
 /* Adjust size for a 1280px screen */
 @media screen and (max-width: 1280px) {
   .wrapper {
     margin: 20px !important;
-  }
-
-  .v-form {
-    width: 34.5%;
   }
 }
 
@@ -190,10 +184,6 @@ const submitForgotPasswordForm = async () => {
 @media screen and (max-width: 768px) {
   .signin-form {
     padding: 50px 65px;
-  }
-
-  .v-form {
-    width: unset;
   }
 }
 

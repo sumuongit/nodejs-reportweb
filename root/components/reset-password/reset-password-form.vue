@@ -143,7 +143,8 @@ const submitResetPasswordForm = async () => {
 </script>
 
 <template>
-  <div class="d-flex justify-center mt-16 wrapper">
+ <div class="d-flex flex-column justify-center align-center ga-5">
+  <div class="d-flex flex-column justify-center align-center mt-16 wrapper"> 
     <v-form>
       <div class="d-flex flex-column align-center ga-5 reset-password-form">
         <v-text-field variant="underlined" v-model="formData.password" :type="showPassword ? 'text' : 'password'"
@@ -182,6 +183,7 @@ const submitResetPasswordForm = async () => {
       </v-snackbar>
     </v-form>
   </div>
+ </div>
 </template>
 
 <style scoped>
@@ -192,6 +194,13 @@ const submitResetPasswordForm = async () => {
 .reset-password-form {
   border: 1px solid #000;
   padding: 50px 75px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
 }
 
 .v-text-field {
@@ -217,18 +226,10 @@ const submitResetPasswordForm = async () => {
   opacity: 0.8;
 }
 
-.v-form {
-  width: 22.5%;
-}
-
 /* Adjust size for a 1280px screen */
 @media screen and (max-width: 1280px) {
   .wrapper {
     margin: 20px !important;
-  }
-
-  .v-form {
-    width: 34.5%;
   }
 }
 
@@ -236,10 +237,6 @@ const submitResetPasswordForm = async () => {
 @media screen and (max-width: 768px) {
   .signin-form {
     padding: 50px 65px;
-  }
-
-  .v-form {
-    width: unset;
   }
 }
 

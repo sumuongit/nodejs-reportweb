@@ -1,4 +1,3 @@
-//**********DEPENDENCIES**********//
 const jsonwebtoken = require('jsonwebtoken');
 const bcryptjs = require('bcryptjs');
 const mailChecker = require('mailchecker');
@@ -11,71 +10,59 @@ const userServiceLayer = require('../service/user')
 
 const userService = new userServiceLayer();
 
-//**********CONFIGURATION**********//
 require('dotenv').config();
 const secretKey = process.env.SECRET_KEY;
 
-//**********CRUD**********//
 exports.register = async function (req, res) {
-    const user = new usermodel(req.body);
-
-    if (req.body.password) {
-        user.hash_password = bcryptjs.hashSync(req.body.password, 10);
-    }
-
-    if (!user.name) {
-        res.status(400).json({ message: "Name must not be empty" });
-        return;
-    }
-
-    if (!user.email) {
-        res.status(400).json({ message: "Email must not be empty" });
-        return;
-    }
-
-    if (!mailChecker.isValid(user.email)) {
-        res.status(400).json({ message: "Please provide a valid email address" });
-        return;
-    }
-
-    if (!user.role) {
-        res.status(400).json({ message: "Role must not be empty" });
-        return;
-    }
-
-    if (!user.hash_password) {
-        res.status(400).json({ message: "Password must not be empty" });
-        return;
-    }
-
     try {
-        // Register the user
-        const userToRegister = await userService.register(user);
-        user.hash_password = undefined;
+        // Validate request body
+        const user = new usermodel(req.body);
 
-        // Send an email
-        const { name, email, password } = req.body;
-        try {
-            const sent = await sendEmail({ name, email, password });
-            if (sent.error) {
-                res.status(500).json({ error: 'Error sending email' });
-            }
-            res.status(200).json({ message: 'Email sent successfully' });
-        } catch (error) {
-            console.error('Error sending email:', error);
-            res.status(500).json({ error: 'Internal server error' });
+        if (!req.body.password) {
+            return res.status(400).json({ message: "Password must not be empty" });
+        }
+        user.hash_password = bcryptjs.hashSync(req.body.password, 10);
+
+        if (!user.name) {
+            return res.status(400).json({ message: "Name must not be empty" });
+        }
+        if (!user.email) {
+            return res.status(400).json({ message: "Email must not be empty" });
+        }
+        if (!mailChecker.isValid(user.email)) {
+            return res.status(400).json({ message: "Please provide a valid email address" });
+        }
+        if (!user.role) {
+            return res.status(400).json({ message: "Role must not be empty" });
         }
 
-        // Respond to the client
-        res.status(200).json(userToRegister);
-    }
-    catch (err) {
+        // Register the user
+        const userToRegister = await userService.register(user);
+        user.hash_password = undefined; // Do not send the hash password back
+
+        // Send email
+        const { name, email, password } = req.body;
+        let emailSent = false;
+        try {
+            const sent = await sendEmail({ name, email, password });
+            emailSent = !sent.error;
+        } catch (error) {
+            console.error('Error sending email:', error);
+        }
+
+        // Final response
+        res.status(200).json({
+            message: emailSent ? 'User registered and email sent successfully' : 'User registered, but email failed to send',
+            user: userToRegister,
+        });
+    } catch (err) {
+        console.error('Error during registration:', err);
         res.status(500).json({
             success: false,
-            message: err.message
+            message: err.message,
         });
     }
-}
+};
 
 exports.signin = async function (req, res) {
     try {
@@ -93,7 +80,13 @@ exports.signin = async function (req, res) {
                 email: user.email,
                 role: user.role,
                 _id: user._id
-            }, secretKey)
+            }, secretKey, { expiresIn: '5m' }),
+            refreshToken: jsonwebtoken.sign({
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                _id: user._id
+            }, secretKey, { expiresIn: '15m' })
         });
     }
     catch (err) {
@@ -103,6 +96,47 @@ exports.signin = async function (req, res) {
         });
     }
 }
+
+exports.refreshToken = async function (req, res) {
+    try {
+        const refreshToken = req.body.refreshToken;
+
+        if (!refreshToken) {
+            return res.status(403).json({
+                success: false,
+                message: 'Refresh token is required'
+            });
+        }
+
+        // Verify the refresh token
+        jsonwebtoken.verify(refreshToken, secretKey, async (err, decoded) => {
+            if (err) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Invalid or expired refresh token. Please log in again.'
+                });
+            }
+
+            // Generate a new token
+            const token = jsonwebtoken.sign({
+                name: decoded.name,
+                email: decoded.email,
+                role: decoded.role,
+                _id: decoded._id
+            }, secretKey, { expiresIn: '5m' });
+
+            res.json({
+                success: true,
+                token
+            });
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+};
 
 exports.forgotPassword = async function (req, res) {
     try {
@@ -153,7 +187,6 @@ exports.resetPassword = async function (req, res) {
     try {
         const { token, newPassword } = req.body;
 
-        // Validate input
         if (!token || !newPassword) {
             return res.status(400).json({
                 success: false,

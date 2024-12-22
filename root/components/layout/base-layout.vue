@@ -18,9 +18,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P4C56NSB" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
-
   <div class="layout" style="background-color: #FFF">
     <header>
       <slot name="header"></slot>
@@ -38,7 +35,7 @@ onMounted(() => {
 .layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  /* min-height: 100vh; */
 }
 
 .main-content {

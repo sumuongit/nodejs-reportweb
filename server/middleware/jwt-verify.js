@@ -1,7 +1,5 @@
-//**********DEPENDENCIES**********//
 const jsonwebtoken = require('jsonwebtoken');
 
-//**********CONFIGURATION**********//
 require('dotenv').config();
 const secretKey = process.env.SECRET_KEY;
 
