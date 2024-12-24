@@ -78,7 +78,7 @@ const submitSigninForm = async () => {
         snackbarMessage.value = 'You have signed in successfully!';
         snackbarColor.value = 'success';
         snackbar.value = true;
-        router.go('/home');
+        router.go('/home.html');
       } else {
         throw new Error('Token not received. Please try again.');
       }
@@ -145,7 +145,7 @@ const submitSigninForm = async () => {
             </svg>
           </v-btn>
         </div>
-        <a href="/forgot-password" style="font-size: 14px; text-decoration: none;">Forgot password?</a>
+        <a href="/forgot-password.html" style="font-size: 14px; text-decoration: none;">Forgot password?</a>
       </div>
       <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="3000">
         {{ snackbarMessage }}

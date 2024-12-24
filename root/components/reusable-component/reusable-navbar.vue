@@ -11,7 +11,7 @@ const props = defineProps({
     <v-btn v-for="item in props.menuItems" :key="item.title" :href="item.link" :class="{
       isActive:
         // (item.link === '/blog' && props.currentPath.includes('blogs')) ||
-        item.link === props.currentPath.split('.')[0]
+        item.link === props.currentPath //.split('.')[0]
     }" flat>{{ item.title }}</v-btn>
   </div>
 </template>

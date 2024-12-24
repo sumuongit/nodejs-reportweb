@@ -27,5 +27,5 @@ export default defineConfig({
     // Ensure HTML is enabled in markdown-it
     html: true
   },
-  cleanUrls: true 
+  //cleanUrls: true 
 })

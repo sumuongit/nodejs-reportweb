@@ -136,23 +136,7 @@ const submitRegisterForm = async () => {
         localStorage.removeItem('authToken');
         Cookies.remove('refreshToken');
         router.go('/');
-      }
-      // console.error('Error during register:', error);
-
-      // // Determine the error message based on the response
-      // if (error.response) {
-      //   // Server returned an error response
-      //   snackbarMessage.value = error.response.data.message || 'Register failed. Please try again.';
-      // } else if (error.request) {
-      //   // Request made but no response received
-      //   snackbarMessage.value = 'No response from the server. Please check your connection.';
-      // } else {
-      //   // Other errors
-      //   snackbarMessage.value = 'An unexpected error occurred. Please try again.';
-      // }
-
-      // snackbarColor.value = 'error';
-
+      }    
     } finally {
       snackbar.value = true;
       isSubmitting.value = false;

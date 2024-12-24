@@ -22,7 +22,7 @@ const isTokenExpired = (token) => {
 onMounted(() => {
   const token = localStorage.getItem('authToken');
   if (token && !isTokenExpired(token)) {
-    router.go('/home');
+    router.go('/home.html');
   } 
 });
 </script>

@@ -9,6 +9,7 @@ router.post('/auth/register', jwtVerify.tokenVerify, userController.register);
 router.post('/auth/signin', userController.signin);
 router.post('/auth/refreshToken', userController.refreshToken);
 router.post('/auth/forgotPassword', userController.forgotPassword);
+router.post('/auth/validateResetToken', userController.validateResetToken);
 router.post('/auth/resetPassword', userController.resetPassword);
 
 module.exports = router;

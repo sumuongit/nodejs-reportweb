@@ -150,7 +150,7 @@ exports.forgotPassword = async function (req, res) {
 
         const { email } = req.body;
         const resetPasswordToken = await generatePasswordResetToken(user);
-        const resetPasswordUrl = `${process.env.PRO_ORIGIN}/reset-password?token=${resetPasswordToken}`;
+        const resetPasswordUrl = `${process.env.PRO_ORIGIN}/reset-password.html?token=${resetPasswordToken}`;
 
         try {
             const emailSent = await sendEmailForgotPassword({ email, resetPasswordUrl });
@@ -182,6 +182,46 @@ exports.forgotPassword = async function (req, res) {
         });
     }
 }
+
+exports.validateResetToken = async function (req, res) {
+    try {
+        const { token } = req.body;
+
+        if (!token) {
+            return res.status(400).json({
+                success: false,
+                message: 'Token is required.'
+            });
+        }
+
+        // Hash the token to match the stored hash
+        const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+        // Find the user by the token and check expiration
+        const user = await userService.resetPassword({
+            resetPasswordToken: tokenHash,
+            resetPasswordExpires: { $gt: Date.now() } // Ensure token is not expired
+        });
+
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid or expired token.'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Token is valid.'
+        });
+    } catch (error) {
+        console.error('Error in validateToken:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error.'
+        });
+    }
+};
 
 exports.resetPassword = async function (req, res) {
     try {

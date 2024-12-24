@@ -21,7 +21,7 @@ module.exports = async (emailObj) => {
             to: emailObj.email,
             host: process.env.SMTP_HOST,
             subject: `Site Point: A1 Polymer Power BI Report`,
-            html: `<p>Click <a href='https://powerbi.a1polymer.com'>here</a> to sign in using the credentials provided below.</p>
+            html: `<p>Click <a href="${rocess.env.PRO_ORIGIN}">here</a> to sign in using the credentials provided below.</p>
                 <div>
                     Name:
                     <strong>${emailObj.name}</strong>
