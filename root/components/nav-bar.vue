@@ -142,7 +142,7 @@ const isMdAndUp = computed(() => mdAndUp.value);
       <v-app-bar-nav-icon @click="drawer = !drawer" v-if="!isMdAndUp"></v-app-bar-nav-icon>
     </v-app-bar>
     <!-- Mobile Navigation Drawer -->
-    <v-navigation-drawer v-model="drawer" app temporary>
+    <v-navigation-drawer v-if="isAuthenticated" v-model="drawer" app temporary>
       <ReusableNavbar :class="navBarMenuClass" :menuItems="filteredMenuItems" :currentPath="currentPath" />
       <v-divider></v-divider>
       <!-- <v-btn flat class="login-btn">Login</v-btn> -->

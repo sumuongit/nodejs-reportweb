@@ -1,4 +1,3 @@
-//**********DEPENDENCIES**********//
 const mongoose = require('mongoose');
 const bCrypt = require('bcryptjs');
 

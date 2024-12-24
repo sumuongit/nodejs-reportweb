@@ -41,10 +41,10 @@ exports.register = async function (req, res) {
         user.hash_password = undefined; // Do not send the hash password back
 
         // Send email
-        const { name, email, password } = req.body;
+        const { email, password } = req.body;
         let emailSent = false;
         try {
-            const sent = await sendEmail({ name, email, password });
+            const sent = await sendEmail({ email, password });
             emailSent = !sent.error;
         } catch (error) {
             console.error('Error sending email:', error);

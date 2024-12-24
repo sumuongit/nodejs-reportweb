@@ -102,7 +102,7 @@ const submitRegisterForm = async () => {
         }
       );
 
-      snackbarMessage.value = 'You have registered a user successfully!';
+      snackbarMessage.value = 'User registered and email sent successfully';
       snackbarColor.value = 'success';
       snackbar.value = true;
       //router.go('/home');     
@@ -128,7 +128,7 @@ const submitRegisterForm = async () => {
           }
         );
 
-        snackbarMessage.value = 'You have registered a user successfully!';
+        snackbarMessage.value = 'User registered and email sent successfully';
         snackbarColor.value = 'success';
         snackbar.value = true;
       }
@@ -214,7 +214,7 @@ const submitRegisterForm = async () => {
   flex-direction: column;
   gap: 16px;
   width: 100%;
-  max-width: 400px;
+  max-width: 424px;
   margin: auto;
 }
 
@@ -252,6 +252,7 @@ const submitRegisterForm = async () => {
 @media screen and (max-width: 768px) {
   .register-form {
     padding: 50px 65px;
+    max-width: unset;
   }
 }
 

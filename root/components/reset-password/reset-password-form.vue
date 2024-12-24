@@ -215,7 +215,7 @@ const submitResetPasswordForm = async () => {
   flex-direction: column;
   gap: 16px;
   width: 100%;
-  max-width: 400px;
+  max-width: 424px;
   margin: auto;
 }
 
@@ -251,8 +251,8 @@ const submitResetPasswordForm = async () => {
 
 /* Further adjustments for smaller screens */
 @media screen and (max-width: 768px) {
-  .signin-form {
-    padding: 50px 65px;
+  .reset-password-form {
+    max-width: unset;
   }
 }
 
