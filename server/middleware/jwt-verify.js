@@ -1,4 +1,4 @@
-const jsonwebtoken = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 const secretKey = process.env.SECRET_KEY;
@@ -12,7 +12,7 @@ exports.tokenVerify = function (req, res, next) {
         })
     }
     else {
-        jsonwebtoken.verify(token.split(' ')[1], secretKey, (err, value) => {
+        jwt.verify(token.split(' ')[1], secretKey, (err, value) => {
             if (err) {
                 res.status(500).json({
                     success: false,

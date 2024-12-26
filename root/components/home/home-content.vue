@@ -34,15 +34,31 @@ const fetchReportContent = async () => {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
-        });
+        });        
+       
+        const reportUrl = jwtDecode(response.data.signedUrl);
+        iframeHtmlContent.value = reportUrl.url;
 
-        if (response.status === 200 && response.data.url) {
-            iframeHtmlContent.value = response.data.url;
-            //snackbarMessage.value = 'Report loaded successfully!';
-            //snackbarColor.value = 'success';
-        } else {
-            throw new Error('Invalid response from server.');
-        }
+        // if (response.status === 200) {
+        //     // Extract the body content
+        //     const parser = new DOMParser();
+        //     const doc = parser.parseFromString(response.data, 'text/html');
+        //     iframeHtmlContent.value = doc.body.innerHTML; // Only pass the body content
+        // }
+
+        // if (response.status === 200) {
+        //     iframeHtmlContent.value = response.data;
+        // } else {
+        //     throw new Error('Failed to fetch report content.');
+        // }
+
+        // if (response.status === 200 && response.data.url) {
+        //     iframeHtmlContent.value = response.data.url;
+        //     //snackbarMessage.value = 'Report loaded successfully!';
+        //     //snackbarColor.value = 'success';
+        // } else {
+        //     throw new Error('Invalid response from server.');
+        // }
     } catch (error) {
         try {
             const refreshToken = Cookies.get('refreshToken');
@@ -55,14 +71,32 @@ const fetchReportContent = async () => {
                 },
             });
 
-            if (retryResponse.status === 200 && retryResponse.data.url) {
-                iframeHtmlContent.value = retryResponse.data.url;
-                //snackbarMessage.value = 'Report loaded successfully!';
-                //snackbarColor.value = 'success';
-                //snackbar.value = true;
-            } else {
-                throw new Error('Invalid response from server after refresh.');
-            }
+            //const { signedUrl } = retryResponse.data;
+           // iframeHtmlContent.value = retryResponse.data.signedUrl;
+            //console.log("retry signed-url: ", iframeHtmlContent.value)
+            const reportUrl = jwtDecode(retryResponse.data.signedUrl);
+            iframeHtmlContent.value = reportUrl.url;
+            // if (response.status === 200) {
+            //     // Extract the body content
+            //     const parser = new DOMParser();
+            //     const doc = parser.parseFromString(response.data, 'text/html');
+            //     iframeHtmlContent.value = doc.body.innerHTML; // Only pass the body content
+            // }
+
+            // if (response.status === 200) {
+            //     iframeHtmlContent.value = response.data;
+            // } else {
+            //     throw new Error('Failed to fetch report content.');
+            // }
+
+            // if (retryResponse.status === 200 && retryResponse.data.url) {
+            //     iframeHtmlContent.value = retryResponse.data.url;
+            //     //snackbarMessage.value = 'Report loaded successfully!';
+            //     //snackbarColor.value = 'success';
+            //     //snackbar.value = true;
+            // } else {
+            //     throw new Error('Invalid response from server after refresh.');
+            // }
         } catch {
             localStorage.removeItem('authToken');
             Cookies.remove('refreshToken');
@@ -97,7 +131,8 @@ const fetchReportContent = async () => {
         </v-snackbar>
     </div>
     <div v-if="iframeHtmlContent" class="it">
-        <iframe style="width: 100%; height: 500px; min-height: 80vh; margin-top: 5px;" frameborder="0" :src="iframeHtmlContent"></iframe>
+        <iframe style="width: 100%; height: 500px; min-height: 80vh; margin-top: 5px;" frameborder="0"
+            :src="iframeHtmlContent"></iframe>
     </div>
 </template>
 
