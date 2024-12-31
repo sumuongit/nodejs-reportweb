@@ -80,13 +80,13 @@ exports.signin = async function (req, res) {
                 email: user.email,
                 role: user.role,
                 _id: user._id
-            }, secretKey, { expiresIn: '5m' }),
+            }, secretKey, { expiresIn: '15m' }),
             refreshToken: jsonwebtoken.sign({
                 name: user.name,
                 email: user.email,
                 role: user.role,
                 _id: user._id
-            }, secretKey, { expiresIn: '15m' })
+            }, secretKey, { expiresIn: '30m' })
         });
     }
     catch (err) {
@@ -123,7 +123,7 @@ exports.refreshToken = async function (req, res) {
                 email: decoded.email,
                 role: decoded.role,
                 _id: decoded._id
-            }, secretKey, { expiresIn: '5m' });
+            }, secretKey, { expiresIn: '15m' });
 
             res.json({
                 success: true,

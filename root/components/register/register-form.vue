@@ -14,6 +14,7 @@ if (import.meta.env.MODE === 'development') {
   baseUrl = import.meta.env.VITE_PRO_BASE_URL;
 } else {
   console.log('Running client in unknown or development mode');
+  baseUrl = import.meta.env.VITE_DEV_BASE_URL || '';
 }
 
 const snackbar = ref(false);

@@ -1,12 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const userRoute = require('./routes/user');
-const axios = require('axios');
 const reportRoute = require('./routes/report');
 const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
-//const sendEmail = require("../server/utils/send-email");
 
 const app = express();
 const PORT = process.env.PORT || 5004;
@@ -42,51 +40,6 @@ app.use('/api', reportRoute);
 // Serve static files from the VitePress `dist` directory
 //app.use(express.static(path.join(__dirname, '..', 'root', '.vitepress', 'dist')));
 app.use(express.static(path.join(__dirname, 'public/dist')));
-
-// Proxy route to fetch the Power BI report
-// app.get('/api/report/read', async (req, res) => {
-//     try {
-//         const authToken = req.headers.authorization;
-
-//         if (!authToken) {
-//             return res.status(401).send({ message: 'Unauthorized' });
-//         }
-
-//         // Proxy the request without exposing the direct URL
-//         const powerBiReportUrl = "https://app.powerbi.com/view?r=eyJrIjoiYjJkZjQxNzAtY2U1My00OWMyLTk5YWYtOGUyMjkxZmQyZDM5IiwidCI6ImM5Y2NlOGY1LWJjOTgtNDU4Yi04NmE0LWZlYWMwZjcyODc4MyIsImMiOjEwfQ%3D%3D";
-
-//         const response = await axios.get(powerBiReportUrl, {
-//             headers: {
-//                 'Authorization': `Bearer ${authToken}`,
-//             },
-//             responseType: 'arraybuffer',
-//         });
-
-//         // Send the content back as-is
-//         res.set('Content-Type', 'text/html'); // Ensure correct MIME type
-//         res.send(response.data);
-//     } catch (error) {
-//         console.error('Error fetching Power BI report:', error.message);
-//         res.status(500).send({ message: 'Failed to fetch report content.' });
-//     }
-// });
-
-// app.get('/api/report/read', async (req, res) => {
-//     try {
-//         const authToken = req.headers.authorization;
-
-//         if (!authToken) {
-//             return res.status(401).send({ message: 'Unauthorized' });
-//         }
-
-//         const powerBiUrl = "https://app.powerbi.com/view?r=eyJrIjoiYjJkZjQxNzAtY2U1My00OWMyLTk5YWYtOGUyMjkxZmQyZDM5IiwidCI6ImM5Y2NlOGY1LWJjOTgtNDU4Yi04NmE0LWZlYWMwZjcyODc4MyIsImMiOjEwfQ%3D%3D";
-
-//         res.status(200).send({ url: powerBiUrl });
-//     } catch (error) {
-//         console.error('Error fetching Power BI report:', error.message);
-//         res.status(500).send({ message: 'Failed to fetch report content.' });
-//     }
-// });
 
 // Catch-all route to serve the index.html for any undefined routes (single-page app fallback)
 app.get('*', (req, res) => {

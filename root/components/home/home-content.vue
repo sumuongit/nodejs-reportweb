@@ -6,12 +6,18 @@ import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 
 const router = useRouter();
-
-const snackbar = ref(false);
-const snackbarMessage = ref('');
-const snackbarColor = ref('');
 const isFetching = ref(false);
 const iframeHtmlContent = ref('');
+
+let baseUrl = '';
+if (import.meta.env.MODE === 'development') {
+    baseUrl = import.meta.env.VITE_DEV_BASE_URL;
+} else if (import.meta.env.MODE === 'production') {
+    baseUrl = import.meta.env.VITE_PRO_BASE_URL;
+} else {
+    console.log('Running client in unknown or development mode');
+    baseUrl = import.meta.env.VITE_DEV_BASE_URL || '';
+}
 
 const isTokenExpired = (token) => {
     try {
@@ -30,73 +36,26 @@ const fetchReportContent = async () => {
         const token = localStorage.getItem('authToken');
         if (token && isTokenExpired(token)) throw new Error('Token expired. Please log in again.');
 
-        const response = await axios.get('/api/report/read', {
+        const response = await axios.get(`${baseUrl}/api/report/read`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
-        });        
-       
+        });
         const reportUrl = jwtDecode(response.data.signedUrl);
         iframeHtmlContent.value = reportUrl.url;
-
-        // if (response.status === 200) {
-        //     // Extract the body content
-        //     const parser = new DOMParser();
-        //     const doc = parser.parseFromString(response.data, 'text/html');
-        //     iframeHtmlContent.value = doc.body.innerHTML; // Only pass the body content
-        // }
-
-        // if (response.status === 200) {
-        //     iframeHtmlContent.value = response.data;
-        // } else {
-        //     throw new Error('Failed to fetch report content.');
-        // }
-
-        // if (response.status === 200 && response.data.url) {
-        //     iframeHtmlContent.value = response.data.url;
-        //     //snackbarMessage.value = 'Report loaded successfully!';
-        //     //snackbarColor.value = 'success';
-        // } else {
-        //     throw new Error('Invalid response from server.');
-        // }
     } catch (error) {
         try {
             const refreshToken = Cookies.get('refreshToken');
-            const refreshResponse = await axios.post('/api/auth/refreshToken', { refreshToken });
+            const refreshResponse = await axios.post(`${baseUrl}/api/auth/refreshToken`, { refreshToken });
             localStorage.setItem('authToken', refreshResponse.data.token);
 
-            const retryResponse = await axios.get('/api/report/read', {
+            const retryResponse = await axios.get(`${baseUrl}/api/report/read`, {
                 headers: {
                     'Authorization': `Bearer ${refreshResponse.data.token}`,
                 },
             });
-
-            //const { signedUrl } = retryResponse.data;
-           // iframeHtmlContent.value = retryResponse.data.signedUrl;
-            //console.log("retry signed-url: ", iframeHtmlContent.value)
             const reportUrl = jwtDecode(retryResponse.data.signedUrl);
             iframeHtmlContent.value = reportUrl.url;
-            // if (response.status === 200) {
-            //     // Extract the body content
-            //     const parser = new DOMParser();
-            //     const doc = parser.parseFromString(response.data, 'text/html');
-            //     iframeHtmlContent.value = doc.body.innerHTML; // Only pass the body content
-            // }
-
-            // if (response.status === 200) {
-            //     iframeHtmlContent.value = response.data;
-            // } else {
-            //     throw new Error('Failed to fetch report content.');
-            // }
-
-            // if (retryResponse.status === 200 && retryResponse.data.url) {
-            //     iframeHtmlContent.value = retryResponse.data.url;
-            //     //snackbarMessage.value = 'Report loaded successfully!';
-            //     //snackbarColor.value = 'success';
-            //     //snackbar.value = true;
-            // } else {
-            //     throw new Error('Invalid response from server after refresh.');
-            // }
         } catch {
             localStorage.removeItem('authToken');
             Cookies.remove('refreshToken');
@@ -130,7 +89,7 @@ const fetchReportContent = async () => {
             {{ snackbarMessage }}
         </v-snackbar>
     </div>
-    <div v-if="iframeHtmlContent" class="it">
+    <div v-if="iframeHtmlContent">
         <iframe style="width: 100%; height: 500px; min-height: 80vh; margin-top: 5px;" frameborder="0"
             :src="iframeHtmlContent"></iframe>
     </div>

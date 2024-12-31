@@ -17,6 +17,8 @@ if (import.meta.env.MODE === 'development') {
   baseUrl = import.meta.env.VITE_DEV_BASE_URL || '';
 }
 
+const emit = defineEmits(['reset-complete']);
+
 const snackbar = ref(false);
 const snackbarMessage = ref('');
 const snackbarColor = ref('');
@@ -121,7 +123,8 @@ const submitResetPasswordForm = async () => {
         snackbarMessage.value = 'Password reset successfully!';
         snackbarColor.value = 'success';
         snackbar.value = true;
-        router.go('/');
+        //router.go('/');
+        emit('reset-complete');
       } else {
         throw new Error('Password not reset. Please try again.');
       }
