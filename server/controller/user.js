@@ -36,6 +36,12 @@ exports.register = async function (req, res) {
             return res.status(400).json({ message: "Role must not be empty" });
         }
 
+        // Check for duplicate email
+        const existingUser = await usermodel.findOne({ email: user.email });
+        if (existingUser) {
+            return res.status(409).json({ message: "Email is already registered" });
+        }
+
         // Register the user
         const userToRegister = await userService.register(user);
         user.hash_password = undefined; // Do not send the hash password back
@@ -150,7 +156,7 @@ exports.forgotPassword = async function (req, res) {
 
         const { email } = req.body;
         const resetPasswordToken = await generatePasswordResetToken(user);
-        const resetPasswordUrl = `${process.env.PRO_ORIGIN}/reset-password.html?token=${resetPasswordToken}`;
+        const resetPasswordUrl = `${process.env.PRO_ORIGIN}/reset-password?token=${resetPasswordToken}`;
 
         try {
             const emailSent = await sendEmailForgotPassword({ email, resetPasswordUrl });

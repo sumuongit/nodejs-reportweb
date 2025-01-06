@@ -1,11 +1,6 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios';
-import { useRouter, useRoute } from 'vitepress';
-import Cookies from 'js-cookie';
-
-const router = useRouter();
-const route = useRoute();
 
 let baseUrl = '';
 if (import.meta.env.MODE === 'development') {
@@ -17,8 +12,6 @@ if (import.meta.env.MODE === 'development') {
   baseUrl = import.meta.env.VITE_DEV_BASE_URL || '';
 }
 
-const emit = defineEmits(['reset-complete']);
-
 const snackbar = ref(false);
 const snackbarMessage = ref('');
 const snackbarColor = ref('');
@@ -26,19 +19,29 @@ const snackbarColor = ref('');
 const isSubmitting = ref(false);
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
-const token = ref('');
 
 const formData = ref({
+  name: '',
+  email: '',
   password: '',
   confirmPassword: ''
 });
 
 const errors = ref({
+  name: null,
+  email: null,
   password: null,
   confirmPassword: null
 });
 
 const rules = {
+  name: value => (value ? '' : 'Name is required'),
+  email: value => {
+    if (!value) return 'Email Address is required';
+    const emailPattern = /^[^@]+@anwargroup\.net$/;
+    //const emailPattern = /^\S+@\S+\.\S+$/;
+    return emailPattern.test(value) ? '' : 'Email must be a valid @anwargroup.net address';
+  },
   password: value => {
     if (!value) return 'Password is required';
 
@@ -63,29 +66,6 @@ const rules = {
   }
 };
 
-onMounted(async () => {
-  token.value = route.query?.token || getTokenFromUrl();
-  if (!token.value) {
-    localStorage.removeItem('authToken');
-    Cookies.remove('refreshToken');
-    router.go('/');
-  }
-
-  try {
-    const response = await axios.post(`${baseUrl}/api/auth/validateResetToken`, {
-      token: token.value,
-    });
-
-    if (!response.data.success) {
-      throw new Error(response.data.message || 'Token validation failed.');
-    }
-  } catch (error) {
-    localStorage.removeItem('authToken');
-    Cookies.remove('refreshToken');
-    router.go('/');
-  }
-});
-
 const validateForm = () => {
   let isValid = true;
   Object.keys(rules).forEach(field => {
@@ -97,55 +77,43 @@ const validateForm = () => {
   return isValid;
 };
 
-const getTokenFromUrl = () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('token');
-};
-
-const submitResetPasswordForm = async () => {
+const submitRegisterForm = async () => {
   if (validateForm()) {
     isSubmitting.value = true;
     try {
-      const response = await axios.post(
-        `${baseUrl}/api/auth/resetPassword`,
+      await axios.post(
+        `${baseUrl}/api/auth/registerEx`,
         {
-          token: token.value,
-          newPassword: formData.value.password
+          name: formData.value.name,
+          email: formData.value.email,
+          password: formData.value.password,
+          role: 'user'
         },
         {
           headers: {
-            'Content-Type': 'application/json',
-          }
+            'Content-Type': 'application/json'
+          },
         }
       );
 
-      if (response.data.success) {
-        snackbarMessage.value = 'Password reset successfully!';
-        snackbarColor.value = 'success';
-        snackbar.value = true;
-        //router.go('/');
-        emit('reset-complete');
-      } else {
-        throw new Error('Password not reset. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error during resetting password:', error);
-
-      // Determine the error message based on the response
-      if (error.response) {
-        // Server returned an error response
-        snackbarMessage.value = error.response.data.message || 'Password reset failed. Please try again.';
-      } else if (error.request) {
-        // Request made but no response received
-        snackbarMessage.value = 'No response from the server. Please check your connection.';
-      } else {
-        // Other errors
-        snackbarMessage.value = 'An unexpected error occurred. Please try again.';
-      }
-
-      snackbarColor.value = 'error';
+      snackbarMessage.value = 'User registered and email sent successfully';
+      snackbarColor.value = 'success';
       snackbar.value = true;
-    } finally {
+    }
+    catch (error) {
+      if (error.response && error.response.status === 409) {
+        // Handle duplicate email specifically
+        snackbarMessage.value = 'Email is already registered. Please use a different email.';
+        snackbarColor.value = 'error';
+      } else {
+        // Handle generic errors
+        snackbarMessage.value = 'User not registered due to an error. Please try again.';
+        snackbarColor.value = 'error';
+      }
+      snackbar.value = true;
+    }
+    finally {
+      snackbar.value = true;
       isSubmitting.value = false;
     }
 
@@ -165,9 +133,15 @@ const submitResetPasswordForm = async () => {
   <div class="d-flex flex-column justify-center align-center ga-5">
     <div class="d-flex flex-column justify-center align-center mt-10 wrapper">
       <v-form>
-        <div class="d-flex flex-column align-center ga-5 reset-password-form">
+        <div class="d-flex flex-column align-center ga-5 register-form">
+          <v-text-field variant="underlined" v-model="formData.name" label="Name"
+            :error-messages="errors.name ? [errors.name] : []" @input="errors.name = rules.name(formData.name)"
+            required />
+          <v-text-field variant="underlined" v-model="formData.email" label="Email Address"
+            :error-messages="errors.email ? [errors.email] : []" @input="errors.email = rules.email(formData.email)"
+            placeholder="youremail@anwargroup.net" required />
           <v-text-field variant="underlined" v-model="formData.password" :type="showPassword ? 'text' : 'password'"
-            label="New Password" class="w-100" @click:append-inner="showPassword = !showPassword"
+            label="Password" class="w-100" @click:append-inner="showPassword = !showPassword"
             :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             :error-messages="errors.password ? [errors.password] : []"
             @input="errors.password = rules.password(formData.password)" required />
@@ -178,9 +152,9 @@ const submitResetPasswordForm = async () => {
             :error-messages="errors.confirmPassword ? [errors.confirmPassword] : []"
             @input="errors.confirmPassword = rules.confirmPassword(formData.confirmPassword)" required />
           <div class="d-flex justify-center">
-            <v-btn @click="submitResetPasswordForm" :loading="isSubmitting" :disabled="isSubmitting"
-              class="elevation-0 password-reset-btn">
-              <span v-if="!isSubmitting" style="margin-right: 5px">Reset Password</span>
+            <v-btn @click="submitRegisterForm" :loading="isSubmitting" :disabled="isSubmitting"
+              class="elevation-0 register-btn">
+              <span v-if="!isSubmitting" style="margin-right: 5px">Register</span>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM16.6919 12.2871C16.6539 12.3791 16.599 12.462 16.53 12.531L13.53 15.531C13.384 15.677 13.192 15.751 13 15.751C12.808 15.751 12.616 15.678 12.47 15.531C12.177 15.238 12.177 14.763 12.47 14.47L14.1899 12.75H8C7.586 12.75 7.25 12.414 7.25 12C7.25 11.586 7.586 11.25 8 11.25H14.189L12.469 9.53003C12.176 9.23703 12.176 8.76199 12.469 8.46899C12.762 8.17599 13.237 8.17599 13.53 8.46899L16.53 11.469C16.599 11.538 16.6539 11.6209 16.6919 11.7129C16.7679 11.8969 16.7679 12.1031 16.6919 12.2871Z"
@@ -210,7 +184,7 @@ const submitResetPasswordForm = async () => {
   color: #000;
 }
 
-.reset-password-form {
+.register-form {
   border: 1px solid #000;
   padding: 50px 75px;
 
@@ -226,7 +200,7 @@ const submitResetPasswordForm = async () => {
   width: 100%;
 }
 
-.password-reset-btn {
+.register-btn {
   color: #fff;
   font-family: 'General Sans';
   font-size: 16px;
@@ -241,7 +215,7 @@ const submitResetPasswordForm = async () => {
   background: #0D0D0D;
 }
 
-.password-reset-btn:hover {
+.register-btn:hover {
   opacity: 0.8;
 }
 
@@ -254,7 +228,8 @@ const submitResetPasswordForm = async () => {
 
 /* Further adjustments for smaller screens */
 @media screen and (max-width: 768px) {
-  .reset-password-form {
+  .register-form {
+    padding: 50px 65px;
     max-width: unset;
   }
 }

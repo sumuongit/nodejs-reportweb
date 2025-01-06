@@ -158,7 +158,7 @@ const submitRegisterForm = async () => {
 
 <template>
   <div class="d-flex flex-column justify-center align-center ga-5">
-    <div class="d-flex flex-column justify-center align-center mt-16 wrapper">
+    <div class="d-flex flex-column justify-center align-center mt-10 wrapper">
       <v-form>
         <div class="d-flex flex-column ga-5 register-form">
           <v-text-field variant="underlined" v-model="formData.name" label="Name"

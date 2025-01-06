@@ -4,6 +4,7 @@ const jwtVerify = require('../middleware/jwt-verify');
 const router = express.Router();
 
 router.post('/auth/register', jwtVerify.tokenVerify, userController.register);
+router.post('/auth/registerEx', userController.register);
 router.post('/auth/signin', userController.signin);
 router.post('/auth/refreshToken', userController.refreshToken);
 router.post('/auth/forgotPassword', userController.forgotPassword);

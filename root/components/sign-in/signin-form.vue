@@ -78,7 +78,7 @@ const submitSigninForm = async () => {
         snackbarMessage.value = 'You have signed in successfully!';
         snackbarColor.value = 'success';
         snackbar.value = true;
-        router.go('/home.html');
+        router.go('/home');
       } else {
         throw new Error('Token not received. Please try again.');
       }
@@ -116,7 +116,7 @@ const submitSigninForm = async () => {
 </script>
 
 <template>
-  <div class="d-flex justify-center mt-16 wrapper">
+  <div class="d-flex justify-center mt-10 wrapper">
     <v-form>
       <div class="d-flex flex-column align-center ga-5 signin-form">
         <v-text-field variant="underlined" v-model="formData.email" label="Email Address"
@@ -127,6 +127,7 @@ const submitSigninForm = async () => {
           :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :error-messages="errors.password ? [errors.password] : []"
           @input="errors.password = rules.password(formData.password)" required />
+        <a href="/forgot-password" style="font-size: 14px; text-decoration: none;">Forgot password?</a>
         <div class="d-flex justify-center">
           <v-btn @click="submitSigninForm" :loading="isSubmitting" :disabled="isSubmitting"
             class="elevation-0 signin-btn">
@@ -145,7 +146,7 @@ const submitSigninForm = async () => {
             </svg>
           </v-btn>
         </div>
-        <a href="/forgot-password.html" style="font-size: 14px; text-decoration: none;">Forgot password?</a>
+        <a href="/register-ex" style="font-size: 14px; text-decoration: none;">Don't have an account? Register</a>
       </div>
       <v-snackbar v-model="snackbar" :color="snackbarColor" timeout="3000">
         {{ snackbarMessage }}

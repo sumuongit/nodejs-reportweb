@@ -44,7 +44,21 @@ app.use(express.static(path.join(__dirname, 'public/dist')));
 // Catch-all route to serve the index.html for any undefined routes (single-page app fallback)
 app.get('*', (req, res) => {
     //res.sendFile(path.join(__dirname, '..', 'root', '.vitepress', 'dist', 'index.html'));
-    res.sendFile(path.join(__dirname, 'public/dist/index.html'));
+    //console.log(`Serving index.html for: ${req.path}`);
+    //res.sendFile(path.join(__dirname, 'public/dist/index.html'));
+    if (req.path === '/home') {
+        res.sendFile(path.join(__dirname, 'public/dist/home.html'));
+    } else if (req.path === '/register') {
+        res.sendFile(path.join(__dirname, 'public/dist/register.html'));
+    } else if (req.path === '/registerEx') {
+        res.sendFile(path.join(__dirname, 'public/dist/register-ex.html'));
+    } else if (req.path === '/forgot-password') {
+        res.sendFile(path.join(__dirname, 'public/dist/forgot-password.html'));
+    } else if (req.path === '/reset-password') {
+        res.sendFile(path.join(__dirname, 'public/dist/reset-password.html'));
+    } else {
+        res.sendFile(path.join(__dirname, 'public/dist/index.html'));
+    }
 });
 
 mongoose.connect(mongoDbString);

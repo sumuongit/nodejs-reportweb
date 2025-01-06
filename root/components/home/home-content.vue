@@ -70,7 +70,7 @@ const fetchReportContent = async () => {
 <template>
     <div class="d-flex flex-column justify-center align-center ga-5 hero-container">
         <v-btn v-if="!iframeHtmlContent" density="default" :loading="isFetching" @click="fetchReportContent"
-            class="elevation-0 hero-btn">
+            class="elevation-0 report-btn">
             <span style="margin-right: 5px">Access Report</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path
@@ -90,7 +90,7 @@ const fetchReportContent = async () => {
         </v-snackbar>
     </div>
     <div v-if="iframeHtmlContent">
-        <iframe style="width: 100%; height: 500px; min-height: 80vh; margin-top: 5px;" frameborder="0"
+        <iframe style="width: 100%; height: 500px; min-height: 89vh; margin-top: 5px;" frameborder="0"
             :src="iframeHtmlContent"></iframe>
     </div>
 </template>
@@ -103,7 +103,7 @@ const fetchReportContent = async () => {
     margin-top: 20px;
 }
 
-.hero-btn {
+.report-btn {
     font-family: 'General Sans';
     font-size: 16px;
     font-style: normal;
@@ -118,13 +118,13 @@ const fetchReportContent = async () => {
     text-decoration: none;
 }
 
-.hero-btn:hover {
-    color: #fff;
+.report-btn:hover {
+    opacity: 0.8;
 }
 
 /* Adjust size for a 1280px screen */
 @media screen and (max-width: 1280px) {
-    .hero-btn {
+    .report-btn {
         height: 42px;
     }
 

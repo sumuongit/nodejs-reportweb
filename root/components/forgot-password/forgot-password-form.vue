@@ -106,7 +106,7 @@ const submitForgotPasswordForm = async () => {
 
 <template>
   <div class="d-flex flex-column justify-center align-center ga-5">
-    <div class="d-flex flex-column justify-center align-center mt-16 wrapper">
+    <div class="d-flex flex-column justify-center align-center mt-10 wrapper">
       <v-form>
         <div class="d-flex flex-column align-center ga-5 fetch-email-form">
           <v-text-field variant="underlined" v-model="formData.email" label="Email Address"

@@ -5,7 +5,7 @@
   <div class="hero">
     <div class="d-flex flex-column justify-center align-center ga-5 hero-container">
       <div class="d-flex flex-column" data-aos="fade-up" data-aos-delay="200">
-        <div class="hero-title">Secure Power BI Report</div>
+        <!-- <div class="hero-title">Secure Power BI Report</div> -->
       </div>
     </div>
   </div>

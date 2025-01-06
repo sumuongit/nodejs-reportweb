@@ -19,10 +19,10 @@ const drawer = ref(false);
 const isAuthenticated = ref(false);
 const userRole = ref('user');
 
-const isRegisterButtonActive = computed(() => route.path === '/register.html');
+const isRegisterButtonActive = computed(() => route.path === '/register');
 
 const menuItems = ref([
-  { title: 'Home', link: '/home.html', showIf: () => isAuthenticated.value },
+  { title: 'Home', link: '/home', showIf: () => isAuthenticated.value },
   // { title: 'Solutions', link: '/solutions' },
   // { title: 'Pricing', link: '/pricing' },
   // { title: 'Blog', link: '/blog' },
@@ -125,7 +125,7 @@ const isMdAndUp = computed(() => mdAndUp.value);
       <v-toolbar-items class="flex-grow-tir ga-5 pr-5 justify-end align-center" v-if="isMdAndUp">
         <!-- <v-btn flat class="login-btn">Login</v-btn> -->
         <v-btn v-if="isAuthenticated && userRole === 'admin'" :class="{ 'active-register-btn': isRegisterButtonActive }"
-          :style="{ backgroundColor: isRegisterButtonActive ? '#4169E1' : '' }" flat href="/register.html"
+          :style="{ backgroundColor: isRegisterButtonActive ? '#4169E1' : '' }" flat href="/register"
           class="elevation-0 register-btn">
           <span style="margin-right: 5px">User Register</span>
         </v-btn>
@@ -147,7 +147,7 @@ const isMdAndUp = computed(() => mdAndUp.value);
       <v-divider></v-divider>
       <!-- <v-btn flat class="login-btn">Login</v-btn> -->
       <v-btn v-if="isAuthenticated && userRole === 'admin'" :class="{ 'active-register-btn': isRegisterButtonActive }"
-        :style="{ backgroundColor: isRegisterButtonActive ? '#4169E1' : '' }" flat href="/register.html"
+        :style="{ backgroundColor: isRegisterButtonActive ? '#4169E1' : '' }" flat href="/register"
         class="elevation-0 register-btn">
         <span style="margin-right: 5px">User Register</span>
       </v-btn>
@@ -192,7 +192,12 @@ const isMdAndUp = computed(() => mdAndUp.value);
 }
 
 .sign-out-btn:hover {
-  color: var(--Black, #000);
+  color: #FFF;
+  background-color: #4169E1;
+}
+
+.sign-out-btn:hover path {
+  fill: #FFF;   
 }
 
 .register-btn:hover {

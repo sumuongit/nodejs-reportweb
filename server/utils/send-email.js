@@ -42,11 +42,10 @@ module.exports = async (emailObj) => {
 
         const info = await transporter.sendMail(mailOptions);
 
-        console.log(`Email sent successfully: ${info.messageId}`);
+        //console.log(`Email sent successfully: ${info.messageId}`);
         return { success: true, messageId: info.messageId };
     } catch (err) {
         console.error("Error sending email:", err.message, err.stack);
-
         return {
             success: false,
             error: err.message,
