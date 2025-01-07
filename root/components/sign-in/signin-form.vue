@@ -74,7 +74,7 @@ const submitSigninForm = async () => {
       const refreshToken = response.data.refreshToken;
       if (token) {
         localStorage.setItem('authToken', token);
-        Cookies.set('refreshToken', refreshToken, { secure: process.env.NODE_ENV === 'productions', sameSite: 'Strict' });
+        Cookies.set('refreshToken', refreshToken, { secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
         snackbarMessage.value = 'You have signed in successfully!';
         snackbarColor.value = 'success';
         snackbar.value = true;
