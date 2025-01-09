@@ -60,7 +60,7 @@ const submitForgotPasswordForm = async () => {
         {
           headers: {
             'Content-Type': 'application/json',
-          }
+          }          
         }
       );
 

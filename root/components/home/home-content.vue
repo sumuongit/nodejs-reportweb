@@ -40,23 +40,28 @@ const fetchReportContent = async () => {
             headers: {
                 'Authorization': `Bearer ${token}`,
             },
+            withCredentials: true
         });
         const reportUrl = jwtDecode(response.data.signedUrl);
         iframeHtmlContent.value = reportUrl.url;
     } catch (error) {
         try {
-            const refreshToken = Cookies.get('refreshToken');
-            const refreshResponse = await axios.post(`${baseUrl}/api/auth/refreshToken`, { refreshToken });
+            //const refreshToken = Cookies.get('refreshToken');
+            //const refreshResponse = await axios.post(`${baseUrl}/api/auth/refreshToken`, { refreshToken });
+            const refreshResponse = await axios.post(`${baseUrl}/api/auth/refreshToken`, {}, {
+                withCredentials: true
+            });
             localStorage.setItem('authToken', refreshResponse.data.token);
 
             const retryResponse = await axios.get(`${baseUrl}/api/report/read`, {
                 headers: {
                     'Authorization': `Bearer ${refreshResponse.data.token}`,
                 },
+                withCredentials: true
             });
             const reportUrl = jwtDecode(retryResponse.data.signedUrl);
             iframeHtmlContent.value = reportUrl.url;
-        } catch {
+        } catch (error) {            
             localStorage.removeItem('authToken');
             Cookies.remove('refreshToken');
             router.go('/');

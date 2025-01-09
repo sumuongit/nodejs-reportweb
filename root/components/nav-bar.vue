@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useDisplay } from 'vuetify';
-import { useRoute } from 'vitepress';
+import { useRoute, useRouter } from 'vitepress';
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 import axios from 'axios';
@@ -10,8 +10,19 @@ import ReusableNavbar from './reusable-component/reusable-navbar.vue';
 // Initialize Vuetify's display service
 //const display = useDisplay();
 
+let baseUrl = '';
+if (import.meta.env.MODE === 'development') {
+  baseUrl = import.meta.env.VITE_DEV_BASE_URL;
+} else if (import.meta.env.MODE === 'production') {
+  baseUrl = import.meta.env.VITE_PRO_BASE_URL;
+} else {
+  console.log('Running client in unknown or development mode');
+  baseUrl = import.meta.env.VITE_DEV_BASE_URL || '';
+}
+
 const { mdAndUp } = useDisplay();
 const route = useRoute();
+const router = useRouter();
 
 // Define the drawer state as a reactive variable
 const drawer = ref(false);
@@ -38,10 +49,28 @@ const navBarMenuClass = ref('navbar-menu-home');
 // Define a reactive variable to track the current route
 const currentPath = ref('');
 
-const signout = () => {
-  localStorage.removeItem('authToken');
-  Cookies.remove('refreshToken');
-}
+const signout = async () => {
+  try {    
+    const token = localStorage.getItem('authToken');
+    await axios.post(`${baseUrl}/api/auth/signout`, {}, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      withCredentials: true
+    });
+    localStorage.removeItem('authToken');
+    Cookies.remove('refreshToken');
+    // Redirect the user to the login or home page
+    router.go('/');
+  } catch (error) {
+    console.error("Error during signout:", error);
+  }
+};
+
+// const signout = () => {
+//   localStorage.removeItem('authToken');
+//   Cookies.remove('refreshToken');
+// }
 
 // Click handler to close the drawer
 const handleOutsideClick = () => {
@@ -89,9 +118,11 @@ onMounted(async () => {
       isAuthenticated.value = true;
       userRole.value = decodedToken.role || 'user';
     } else {
-      const refreshToken = Cookies.get('refreshToken');
-      if (!refreshToken) throw new Error('No refresh token found.');
-      const refreshResponse = await axios.post('/api/auth/refreshToken', { refreshToken });
+      //const refreshToken = Cookies.get('refreshToken');
+      //if (!refreshToken) throw new Error('No refresh token found.');
+      const refreshResponse = await axios.post(`${baseUrl}/api/auth/refreshToken`, {}, {
+        withCredentials: true, // Ensures cookies are sent with the request
+      });
       localStorage.setItem('authToken', refreshResponse.data.token);
       const decodedToken = jwtDecode(token);
       isAuthenticated.value = true;
@@ -129,7 +160,7 @@ const isMdAndUp = computed(() => mdAndUp.value);
           class="elevation-0 register-btn">
           <span style="margin-right: 5px">User Register</span>
         </v-btn>
-        <v-btn v-if="isAuthenticated" @click="signout" flat href="/" class="elevation-0 sign-out-btn">
+        <v-btn v-if="isAuthenticated" @click="signout" flat class="elevation-0 sign-out-btn">
           <span style="margin-right: 5px">Sign Out</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path
@@ -197,7 +228,7 @@ const isMdAndUp = computed(() => mdAndUp.value);
 }
 
 .sign-out-btn:hover path {
-  fill: #FFF;   
+  fill: #FFF;
 }
 
 .register-btn:hover {

@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vitepress';
-import Cookies from 'js-cookie';
+//import Cookies from 'js-cookie';
 
 const router = useRouter();
 
@@ -67,14 +67,16 @@ const submitSigninForm = async () => {
           headers: {
             'Content-Type': 'application/json',
           },
+          withCredentials: true
         }
       );
 
       const token = response.data.token;
-      const refreshToken = response.data.refreshToken;
+      //const refreshToken = response.data.refreshToken;
       if (token) {
         localStorage.setItem('authToken', token);
-        Cookies.set('refreshToken', refreshToken, { secure: process.env.NODE_ENV === 'production', sameSite: 'Strict' });
+        //Cookies.set('refreshToken', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'productions', sameSite: 'Strict' });
+        //httpOnly: true, // Prevents access via JavaScript
         snackbarMessage.value = 'You have signed in successfully!';
         snackbarColor.value = 'success';
         snackbar.value = true;

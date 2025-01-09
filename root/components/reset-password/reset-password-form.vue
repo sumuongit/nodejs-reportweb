@@ -115,7 +115,7 @@ const submitResetPasswordForm = async () => {
         {
           headers: {
             'Content-Type': 'application/json',
-          }
+          }          
         }
       );
 

@@ -92,7 +92,7 @@ const submitRegisterForm = async () => {
         {
           headers: {
             'Content-Type': 'application/json'
-          },
+          }
         }
       );
 

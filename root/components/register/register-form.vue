@@ -100,6 +100,7 @@ const submitRegisterForm = async () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
+          withCredentials: true
         }
       );
 
@@ -109,8 +110,12 @@ const submitRegisterForm = async () => {
       //router.go('/home');     
     } catch (error) {
       try {
-        const refreshToken = Cookies.get('refreshToken');
-        const refreshResponse = await axios.post('/api/auth/refreshToken', { refreshToken });
+        //const refreshToken = Cookies.get('refreshToken');
+        //const refreshResponse = await axios.post('/api/auth/refreshToken', { refreshToken });
+        const refreshResponse = await axios.post(`${baseUrl}/api/auth/refreshToken`, {}, {
+          withCredentials: true
+        });
+
         localStorage.setItem('authToken', refreshResponse.data.token);
 
         await axios.post(
@@ -126,6 +131,7 @@ const submitRegisterForm = async () => {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${refreshResponse.data.token}`,
             },
+            withCredentials: true
           }
         );
 
@@ -134,10 +140,11 @@ const submitRegisterForm = async () => {
         snackbar.value = true;
       }
       catch {
+        console.error('register1', err);
         localStorage.removeItem('authToken');
         Cookies.remove('refreshToken');
         router.go('/');
-      }    
+      }
     } finally {
       snackbar.value = true;
       isSubmitting.value = false;
