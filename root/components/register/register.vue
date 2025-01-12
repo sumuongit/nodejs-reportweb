@@ -5,7 +5,6 @@ import Register from '../register/register-form.vue';
 import { onMounted } from 'vue';
 import { useRouter } from 'vitepress';
 import { jwtDecode } from 'jwt-decode';
-import Cookies from 'js-cookie';
 import axios from 'axios';
 
 let baseUrl = '';
@@ -35,18 +34,19 @@ onMounted(async () => {
   const token = localStorage.getItem('authToken');
   if (!token || isTokenExpired(token)) {
     try {
-      //const refreshToken = Cookies.get('refreshToken');
-      //if (!refreshToken) throw new Error('Reg-No refresh token found.');
-      //const refreshResponse = await axios.post('/api/auth/refreshToken', { refreshToken });
       const refreshResponse = await axios.post(`${baseUrl}/api/auth/refreshToken`, {}, {
         withCredentials: true
       });
 
       localStorage.setItem('authToken', refreshResponse.data.token);
-    } catch (err) {
-      console.error('Error refreshing access token:', err);
+    } catch {
+      // await axios.post(`${baseUrl}/api/auth/signout`, {}, {
+      //   headers: {
+      //     'Authorization': `Bearer ${token}`,
+      //   },
+      //   withCredentials: true
+      // });
       localStorage.removeItem('authToken');
-      Cookies.remove('refreshToken');
       router.go('/');
     }
   }

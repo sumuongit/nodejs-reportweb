@@ -142,18 +142,20 @@ exports.refreshToken = async function (req, res) {
         if (!refreshToken) {
             return res.status(403).json({
                 success: false,
-                message: 'Refresh token is required'
+                message: 'Refresh Token not found.  Please sign in again.'
             });
         }
 
         // Verify the refresh token
         jsonwebtoken.verify(refreshToken, secretKey, async (err, decoded) => {
             if (err) {
-                console.error('JWT Verification Error:', err); // Log JWT verification errors
-                return res.status(403).json({
-                    success: false,
-                    message: 'Invalid or expired refresh token. Please log in again.'
+                res.clearCookie('refreshToken', {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'Strict',
+                    path: '/',
                 });
+                return res.status(403).json({ success: false, message: 'Authentication failed. Please sign in again.' });
             }
 
             // Generate a new token

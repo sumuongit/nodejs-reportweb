@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vitepress';
-import Cookies from 'js-cookie';
 
 const router = useRouter();
 const route = useRoute();
@@ -66,8 +65,13 @@ const rules = {
 onMounted(async () => {
   token.value = route.query?.token || getTokenFromUrl();
   if (!token.value) {
+    await axios.post(`${baseUrl}/api/auth/signout`, {}, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      withCredentials: true
+    });
     localStorage.removeItem('authToken');
-    Cookies.remove('refreshToken');
     router.go('/');
   }
 
@@ -79,9 +83,14 @@ onMounted(async () => {
     if (!response.data.success) {
       throw new Error(response.data.message || 'Token validation failed.');
     }
-  } catch (error) {
+  } catch {
+    // await axios.post(`${baseUrl}/api/auth/signout`, {}, {
+    //   headers: {
+    //     'Authorization': `Bearer ${token}`,
+    //   },
+    //   withCredentials: true
+    // });
     localStorage.removeItem('authToken');
-    Cookies.remove('refreshToken');
     router.go('/');
   }
 });
@@ -115,7 +124,7 @@ const submitResetPasswordForm = async () => {
         {
           headers: {
             'Content-Type': 'application/json',
-          }          
+          }
         }
       );
 

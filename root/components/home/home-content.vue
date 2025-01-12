@@ -3,7 +3,6 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vitepress';
 import { jwtDecode } from 'jwt-decode';
-import Cookies from 'js-cookie';
 
 const router = useRouter();
 const isFetching = ref(false);
@@ -46,8 +45,6 @@ const fetchReportContent = async () => {
         iframeHtmlContent.value = reportUrl.url;
     } catch (error) {
         try {
-            //const refreshToken = Cookies.get('refreshToken');
-            //const refreshResponse = await axios.post(`${baseUrl}/api/auth/refreshToken`, { refreshToken });
             const refreshResponse = await axios.post(`${baseUrl}/api/auth/refreshToken`, {}, {
                 withCredentials: true
             });
@@ -61,9 +58,14 @@ const fetchReportContent = async () => {
             });
             const reportUrl = jwtDecode(retryResponse.data.signedUrl);
             iframeHtmlContent.value = reportUrl.url;
-        } catch (error) {            
+        } catch {
+            // await axios.post(`${baseUrl}/api/auth/signout`, {}, {
+            //     headers: {
+            //         'Authorization': `Bearer ${token}`,
+            //     },
+            //     withCredentials: true
+            // });
             localStorage.removeItem('authToken');
-            Cookies.remove('refreshToken');
             router.go('/');
         }
     } finally {

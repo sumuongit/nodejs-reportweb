@@ -3,7 +3,6 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vitepress';
 import { jwtDecode } from 'jwt-decode';
-import Cookies from 'js-cookie';
 
 const router = useRouter();
 
@@ -110,8 +109,6 @@ const submitRegisterForm = async () => {
       //router.go('/home');     
     } catch (error) {
       try {
-        //const refreshToken = Cookies.get('refreshToken');
-        //const refreshResponse = await axios.post('/api/auth/refreshToken', { refreshToken });
         const refreshResponse = await axios.post(`${baseUrl}/api/auth/refreshToken`, {}, {
           withCredentials: true
         });
@@ -140,9 +137,13 @@ const submitRegisterForm = async () => {
         snackbar.value = true;
       }
       catch {
-        console.error('register1', err);
+        // await axios.post(`${baseUrl}/api/auth/signout`, {}, {
+        //   headers: {
+        //     'Authorization': `Bearer ${token}`,
+        //   },
+        //   withCredentials: true
+        // });
         localStorage.removeItem('authToken');
-        Cookies.remove('refreshToken');
         router.go('/');
       }
     } finally {

@@ -3,7 +3,6 @@ import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useDisplay } from 'vuetify';
 import { useRoute, useRouter } from 'vitepress';
 import { jwtDecode } from 'jwt-decode';
-import Cookies from 'js-cookie';
 import axios from 'axios';
 import ReusableNavbar from './reusable-component/reusable-navbar.vue';
 
@@ -58,19 +57,12 @@ const signout = async () => {
       },
       withCredentials: true
     });
-    localStorage.removeItem('authToken');
-    Cookies.remove('refreshToken');
-    // Redirect the user to the login or home page
+    localStorage.removeItem('authToken');   
     router.go('/');
   } catch (error) {
     console.error("Error during signout:", error);
   }
 };
-
-// const signout = () => {
-//   localStorage.removeItem('authToken');
-//   Cookies.remove('refreshToken');
-// }
 
 // Click handler to close the drawer
 const handleOutsideClick = () => {
@@ -182,7 +174,7 @@ const isMdAndUp = computed(() => mdAndUp.value);
         class="elevation-0 register-btn">
         <span style="margin-right: 5px">User Register</span>
       </v-btn>
-      <v-btn v-if="isAuthenticated" @click="signout" flat href="/" class="sign-out-btn">
+      <v-btn v-if="isAuthenticated" @click="signout" flat class="sign-out-btn">
         <span style="margin-right: 5px">Sign Out</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path
