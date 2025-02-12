@@ -5,7 +5,7 @@ class UserService {
     async register(user) {
         try {
             const result = await userData.register(user);
-            return result; 
+            return result;
         } catch (err) {
             return { success: false, message: err.message };
         }
@@ -14,7 +14,7 @@ class UserService {
     async signin(email) {
         try {
             const result = await userData.signin(email);
-            return result; 
+            return result;
         } catch (err) {
             return { success: false, message: err.message };
         }
@@ -23,7 +23,7 @@ class UserService {
     async forgotPassword(email) {
         try {
             const result = await userData.forgotPassword(email);
-            return result; 
+            return result;
         } catch (err) {
             return { success: false, message: err.message };
         }
@@ -34,10 +34,37 @@ class UserService {
             const result = await userData.resetPassword(
                 {
                     resetPasswordToken: resetPasswordToken,
-                    resetPasswordExpires: resetPasswordExpires  
+                    resetPasswordExpires: resetPasswordExpires
                 }
             );
-            return result; 
+            return result;
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    }
+
+    async getUsers() {
+        try {
+            const result = await userData.getUsers();
+            return result;
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    }
+
+    async update(id, user, options) {
+        try {
+            const result = await userData.update(id, user, options);
+            return result;
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    }
+
+    async delete(id) {
+        try {
+            const result = await userData.delete(id);
+            return result;
         } catch (err) {
             return { success: false, message: err.message };
         }

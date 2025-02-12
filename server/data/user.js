@@ -40,6 +40,33 @@ class UserData {
             return { success: false, message: err.message };
         }
     }
+
+    async getUsers() {
+        try {
+            const result = await usermodel.find().sort({ date: 'desc' });
+            return { success: true, data: result };
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    }
+
+    async update(id, user, options) {
+        try {
+            const result = await usermodel.findByIdAndUpdate(id, user, options);
+            return { success: true, data: result };
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    }
+
+    async delete(id) {
+        try {
+            const result = await usermodel.findByIdAndDelete(id);
+            return result;
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    }
 }
 
 module.exports = UserData;

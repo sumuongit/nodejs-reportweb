@@ -15,7 +15,6 @@ const secretKey = process.env.SECRET_KEY;
 
 exports.register = async function (req, res) {
     try {
-        // Validate request body
         const user = new usermodel(req.body);
 
         if (!req.body.password) {
@@ -56,7 +55,6 @@ exports.register = async function (req, res) {
             console.error('Error sending email:', error);
         }
 
-        // Final response
         res.status(200).json({
             message: emailSent ? 'User registered and email sent successfully' : 'User registered, but email failed to send',
             user: userToRegister,
@@ -73,10 +71,25 @@ exports.register = async function (req, res) {
 exports.signin = async function (req, res) {
     try {
         const user = await userService.signin({ email: req.body.email })
-        if (!user || !user.comparePassword(req.body.password)) {
+
+        if (!user) {
             return res.status(401).json({
                 success: false,
-                message: 'Authentication failed. Invalid user or password.'
+                message: 'User not found. Please check your email or register for an account.'
+            });
+        }
+
+        if (user.status === 'inactive') {
+            return res.status(403).json({
+                success: false,
+                message: 'Your account is inactive. Please contact support to reactivate it.'
+            });
+        }
+
+        if (!user.comparePassword(req.body.password)) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid password. Please try again.'
             });
         }
 
@@ -106,7 +119,7 @@ exports.signin = async function (req, res) {
         // Set the refresh token as an httpOnly cookie
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true, // Prevents access via JavaScript
-            secure: process.env.NODE_ENV === 'production', // Ensures cookies are sent only over HTTPS in production
+            secure: process.env.NODE_ENV === 'productions', // Ensures cookies are sent only over HTTPS in production
             sameSite: 'Strict', // Prevents cross-site attacks
             path: '/', // Cookie is available across the entire domain
             maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
@@ -128,7 +141,7 @@ exports.signin = async function (req, res) {
 exports.signout = (req, res) => {
     res.clearCookie('refreshToken', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === 'productions',
         sameSite: 'Strict',
         path: '/',
     });
@@ -151,7 +164,7 @@ exports.refreshToken = async function (req, res) {
             if (err) {
                 res.clearCookie('refreshToken', {
                     httpOnly: true,
-                    secure: process.env.NODE_ENV === 'production',
+                    secure: process.env.NODE_ENV === 'productions',
                     sameSite: 'Strict',
                     path: '/',
                 });
@@ -182,10 +195,18 @@ exports.refreshToken = async function (req, res) {
 exports.forgotPassword = async function (req, res) {
     try {
         const user = await userService.forgotPassword({ email: req.body.email })
+
         if (!user) {
             return res.status(401).json({
                 success: false,
-                message: 'Fetching email failed. Invalid email address.'
+                message: 'User not found. Please check your email or register for an account.'
+            });
+        }
+
+        if (user.status === 'inactive') {
+            return res.status(403).json({
+                success: false,
+                message: 'Your account is inactive. Please contact support to reactivate it.'
             });
         }
 
@@ -309,5 +330,53 @@ exports.resetPassword = async function (req, res) {
             success: false,
             message: 'Internal server error.'
         });
+    }
+};
+
+exports.getUsers = async function (req, res) {
+    try {
+        const users = await userService.getUsers();
+        res.status(200).json(users);
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+};
+
+exports.update = async function (req, res) {
+    try {
+        const { role, status } = req.body;
+        if (!role || !status) {
+            return res.status(400).json({ message: "All fields are required." });
+        }
+
+        const options = { new: true };
+        const user = await userService.update(req.params.id, req.body, options);
+        res.status(200).json(user);
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+};
+
+exports.delete = async function (req, res) {
+    try {
+        const user = await userService.delete(req.params.id);
+        res.status(200).json({
+            success: true,
+            message: `The User - ${user.name} has been deleted!`
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
     }
 };

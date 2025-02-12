@@ -87,7 +87,8 @@ const submitRegisterForm = async () => {
           name: formData.value.name,
           email: formData.value.email,
           password: formData.value.password,
-          role: 'user'
+          role: 'user',
+          status: 'active'
         },
         {
           headers: {

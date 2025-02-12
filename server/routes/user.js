@@ -12,4 +12,8 @@ router.post('/auth/forgotPassword', userController.forgotPassword);
 router.post('/auth/validateResetToken', userController.validateResetToken);
 router.post('/auth/resetPassword', userController.resetPassword);
 
+router.get('/user/getUsers', jwtVerify.tokenVerify, userController.getUsers);
+router.patch('/user/update/:id', jwtVerify.tokenVerify, userController.update);
+router.delete('/user/delete/:id', jwtVerify.tokenVerify, userController.delete);
+
 module.exports = router;

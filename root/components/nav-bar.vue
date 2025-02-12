@@ -30,6 +30,7 @@ const isAuthenticated = ref(false);
 const userRole = ref('user');
 
 const isRegisterButtonActive = computed(() => route.path === '/register');
+const isUsersButtonActive = computed(() => route.path === '/users');
 
 const menuItems = ref([
   { title: 'Home', link: '/home', showIf: () => isAuthenticated.value },
@@ -145,8 +146,13 @@ const isMdAndUp = computed(() => mdAndUp.value);
       </v-toolbar-items>
       <v-spacer class="flex-grow-vs"></v-spacer>
       <!-- Desktop Menu Items -->
-      <v-toolbar-items class="flex-grow-tir ga-5 pr-5 justify-end align-center" v-if="isMdAndUp">
+      <v-toolbar-items class="flex-grow-tir ga-1 pr-5 justify-end align-center" v-if="isMdAndUp">
         <!-- <v-btn flat class="login-btn">Login</v-btn> -->
+        <v-btn v-if="isAuthenticated && userRole === 'admin'" :class="{ 'active-register-btn': isUsersButtonActive }"
+          :style="{ backgroundColor: isUsersButtonActive ? '#4169E1' : '' }" flat href="/users"
+          class="elevation-0 register-btn">
+          <span style="margin-right: 5px">Users</span>
+        </v-btn>
         <v-btn v-if="isAuthenticated && userRole === 'admin'" :class="{ 'active-register-btn': isRegisterButtonActive }"
           :style="{ backgroundColor: isRegisterButtonActive ? '#4169E1' : '' }" flat href="/register"
           class="elevation-0 register-btn">
@@ -169,6 +175,11 @@ const isMdAndUp = computed(() => mdAndUp.value);
       <ReusableNavbar :class="navBarMenuClass" :menuItems="filteredMenuItems" :currentPath="currentPath" />
       <v-divider></v-divider>
       <!-- <v-btn flat class="login-btn">Login</v-btn> -->
+      <v-btn v-if="isAuthenticated && userRole === 'admin'" :class="{ 'active-register-btn': isUsersButtonActive }"
+        :style="{ backgroundColor: isUsersButtonActive ? '#4169E1' : '' }" flat href="/users"
+        class="elevation-0 register-btn">
+        <span style="margin-right: 5px">Users</span>
+      </v-btn>
       <v-btn v-if="isAuthenticated && userRole === 'admin'" :class="{ 'active-register-btn': isRegisterButtonActive }"
         :style="{ backgroundColor: isRegisterButtonActive ? '#4169E1' : '' }" flat href="/register"
         class="elevation-0 register-btn">

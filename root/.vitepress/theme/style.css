@@ -292,3 +292,11 @@ p {
   border-bottom: none;
   box-shadow: none;
 }
+
+.v-overlay__scrim {
+  opacity: 0.1;
+}
+
+.vp-doc ul {
+  list-style: none;
+}
