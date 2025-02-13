@@ -223,11 +223,14 @@ onUnmounted(() => {
             hide-details single-line></v-text-field>
         </template>
         <v-data-table v-model:page="page" :headers="isMobile ? mobileHeaders : headers" :items="items" :search="search"
-          :items-per-page=itemsPerPage :dense="isMobile">
+          :items-per-page=itemsPerPage :dense="isMobile" class="bg-white">
           <template v-slot:item.sl="{ index }">
             <div class="text-center">
               {{ (page - 1) * itemsPerPage + index + 1 }}
             </div>
+          </template>
+          <template v-slot:item.name="{ item }">
+            <span class="user-name">{{ item.name }}</span>
           </template>
           <template v-slot:item.status="{ item }">
             <div class="text-center">
@@ -246,7 +249,7 @@ onUnmounted(() => {
                 <v-card-title class="d-flex justify-center text-h6">Confirm Deletion</v-card-title>
                 <v-card-text>Are you sure you want to delete this user <b>{{ selectedUser.name }} - {{
                   selectedUser.email
-                }}</b>?</v-card-text>
+                    }}</b>?</v-card-text>
                 <v-card-actions class="d-flex justify-center ga-1">
                   <!-- <v-spacer></v-spacer> -->
                   <v-btn @click="closeDialog" class="elevation-0 register-btn">
@@ -376,6 +379,14 @@ onUnmounted(() => {
 .action-btn-delete:hover {
   color: #fff;
   background: #DB3C30;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    .user-name {
+        background-color: black;
+        color: white;
+    }
 }
 
 /* Adjust size for a 1280px screen */

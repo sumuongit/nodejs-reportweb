@@ -119,7 +119,7 @@ exports.signin = async function (req, res) {
         // Set the refresh token as an httpOnly cookie
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true, // Prevents access via JavaScript
-            secure: process.env.NODE_ENV === 'productions', // Ensures cookies are sent only over HTTPS in production
+            secure: process.env.NODE_ENV === 'production', // Ensures cookies are sent only over HTTPS in production
             sameSite: 'Strict', // Prevents cross-site attacks
             path: '/', // Cookie is available across the entire domain
             maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
@@ -141,7 +141,7 @@ exports.signin = async function (req, res) {
 exports.signout = (req, res) => {
     res.clearCookie('refreshToken', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'productions',
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'Strict',
         path: '/',
     });
@@ -164,7 +164,7 @@ exports.refreshToken = async function (req, res) {
             if (err) {
                 res.clearCookie('refreshToken', {
                     httpOnly: true,
-                    secure: process.env.NODE_ENV === 'productions',
+                    secure: process.env.NODE_ENV === 'production',
                     sameSite: 'Strict',
                     path: '/',
                 });
