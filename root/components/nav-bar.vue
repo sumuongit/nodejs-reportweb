@@ -137,7 +137,7 @@ const isMdAndUp = computed(() => mdAndUp.value);
   <v-app>
     <v-app-bar app flat color="transparent">
       <v-toolbar-title class="flex-grow-tt justify-start align-center title">
-        <span style="font-weight: bold;">Path Point:</span> A1 Polymer Power BI Report
+        <span style="font-weight: bold;">Path Point:</span> Sample Power BI Report
       </v-toolbar-title>
       <v-spacer class="flex-grow-vs"></v-spacer>
       <v-toolbar-items class="flex-grow-tim justify-center align-center" v-if="isMdAndUp">

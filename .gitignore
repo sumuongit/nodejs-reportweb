@@ -5,3 +5,5 @@ root/.vitepress/cache/
 server/node_modules/
 server/public/dist/
 server/.vitepress/
+
+**/.env

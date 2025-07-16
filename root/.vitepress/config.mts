@@ -2,8 +2,8 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Path Point: A1 Polymer Power BI Report",
-  description: "A1 Polymer Power BI Report",
+  title: "Path Point: Sample Power BI Report",
+  description: "Sample Power BI Report",
   head: [
     ['link', { rel: 'icon', href: '/favicon.svg' }],
 

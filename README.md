@@ -9,14 +9,15 @@
 
 ## General Info
 
-This is A1 Polymer Power BI Report Webapp
+This is Sample BI Report Webapp
 
 ## Technologies
 
 This application is created with:
 
-- VS Code
-- VitePress
+- NodeJS
+- ExpressJS
+- MongoDB
 - VueJS
 
 ## Setup
@@ -25,9 +26,9 @@ To clone and run this repository you will need [Git](https://git-scm.com/) insta
 
 ```
 # Clone this repository
-$ git clone https://172.17.18.200/aes-cloud/a1powerbi-webapp.git
+$ git clone https://github.com/sumuongit/nodejs-reportweb.git
 # Go into the repository
-$ cd vitepress-a1powerbi-webapp
+$ cd nodejs-reportweb
 ```
 
 ## Installation
@@ -44,10 +45,10 @@ yarn install
 
 ```
 # Run the development server
-npm run root:dev
+npm run dev
 
 # Or if using Yarn
-yarn root:dev
+yarn dev
 ```
 
 ## Contributing

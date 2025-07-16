@@ -26,7 +26,7 @@ module.exports = async (emailObj) => {
         const mailOptions = {
             from: emailObj.email,
             to: emailObj.email,
-            subject: `Site Point: A1 Polymer Power BI Report`,
+            subject: `Site Point: Sample Power BI Report`,
             text: `Click the following link: ${process.env.PRO_ORIGIN}.`,
             html: `
                 <p>Click <a href="${process.env.PRO_ORIGIN}">here</a> to sign in using the credentials provided below.</p>

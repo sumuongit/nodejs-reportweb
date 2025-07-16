@@ -31,9 +31,9 @@ const errors = ref({
 const rules = {
   email: value => {
     if (!value) return 'Email Address is required';
-    const emailPattern = /^[^@]+@anwargroup\.net$/;
+    const emailPattern = /^[^@]+@samplegroup\.net$/;
     //const emailPattern = /^\S+@\S+\.\S+$/;
-    return emailPattern.test(value) ? '' : 'Email must be a valid @anwargroup.net address';
+    return emailPattern.test(value) ? '' : 'Email must be a valid @samplegroup.net address';
   }
 };
 
@@ -111,7 +111,7 @@ const submitForgotPasswordForm = async () => {
         <div class="d-flex flex-column align-center ga-5 fetch-email-form">
           <v-text-field variant="underlined" v-model="formData.email" label="Email Address"
             :error-messages="errors.email ? [errors.email] : []" @input="errors.email = rules.email(formData.email)"
-            placeholder="youremail@anwargroup.net" required />
+            placeholder="youremail@samplegroup.net" required />
           <div class="d-flex justify-center">
             <v-btn @click="submitForgotPasswordForm" :loading="isSubmitting" :disabled="isSubmitting"
               class="elevation-0 fetch-email-btn">

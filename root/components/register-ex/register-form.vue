@@ -38,9 +38,9 @@ const rules = {
   name: value => (value ? '' : 'Name is required'),
   email: value => {
     if (!value) return 'Email Address is required';
-    const emailPattern = /^[^@]+@anwargroup\.net$/;
+    const emailPattern = /^[^@]+@samplegroup\.net$/;
     //const emailPattern = /^\S+@\S+\.\S+$/;
-    return emailPattern.test(value) ? '' : 'Email must be a valid @anwargroup.net address';
+    return emailPattern.test(value) ? '' : 'Email must be a valid @samplegroup.net address';
   },
   password: value => {
     if (!value) return 'Password is required';
@@ -140,7 +140,7 @@ const submitRegisterForm = async () => {
             required />
           <v-text-field variant="underlined" v-model="formData.email" label="Email Address"
             :error-messages="errors.email ? [errors.email] : []" @input="errors.email = rules.email(formData.email)"
-            placeholder="youremail@anwargroup.net" required />
+            placeholder="youremail@samplegroup.net" required />
           <v-text-field variant="underlined" v-model="formData.password" :type="showPassword ? 'text' : 'password'"
             label="Password" class="w-100" @click:append-inner="showPassword = !showPassword"
             :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
